@@ -1,48 +1,39 @@
-import { useState } from 'react'
-import { Header } from '@/components/Header'
-import { BookingFormModal } from '@/components/BookingFormModal'
-import { HeroSection } from '@/sections/HeroSection'
-import { TrustBarSection } from '@/sections/TrustBarSection'
-import { WhyTrustSection } from '@/sections/WhyTrustSection'
-import { SocialProofSection } from '@/sections/SocialProofSection'
-import { HowItWorksSection } from '@/sections/HowItWorksSection'
-import { WhoNeedsSection } from '@/sections/WhoNeedsSection'
-import { EmbassySection } from '@/sections/EmbassySection'
-import { PnrVerificationSection } from '@/sections/PnrVerificationSection'
-import { TestimonialsSection } from '@/sections/TestimonialsSection'
-import { FaqSection } from '@/sections/FaqSection'
-import { FinalCtaSection } from '@/sections/FinalCtaSection'
+import { Header } from '@/components/site/Header'
+import { MobileCtaBar } from '@/components/site/MobileCtaBar'
+import { Hero } from '@/sections/Hero'
+import { TrustBar } from '@/sections/TrustBar'
+import { Reviews } from '@/sections/Reviews'
+import { HowItWorks } from '@/sections/HowItWorks'
+import { VerifyAndReceive } from '@/sections/VerifyAndReceive'
+import { Benefits } from '@/sections/Benefits'
+import { DocumentComparison } from '@/sections/DocumentComparison'
+import { Countries } from '@/sections/Countries'
+import { Airlines } from '@/sections/Airlines'
+import { Personas } from '@/sections/Personas'
+import { Faq } from '@/sections/Faq'
+import { FinalCta } from '@/sections/FinalCta'
 import { Footer } from '@/sections/Footer'
-import { useLenis } from '@/hooks/useLenis'
 
 export default function App() {
-  const [bookingOpen, setBookingOpen] = useState(false)
-  useLenis()
-
-  const openBooking = () => setBookingOpen(true)
-  const closeBooking = () => setBookingOpen(false)
-
   return (
-    <div className="min-h-[100dvh] bg-jet">
-      <Header onOpenBooking={openBooking} />
-
+    <div className="relative min-h-[100dvh] bg-background">
+      <Header />
       <main>
-        <HeroSection onOpenBooking={openBooking} />
-        <TrustBarSection />
-        <WhyTrustSection />
-        <SocialProofSection />
-        <HowItWorksSection />
-        <WhoNeedsSection />
-        <EmbassySection />
-        <PnrVerificationSection />
-        <TestimonialsSection />
-        <FaqSection />
-        <FinalCtaSection onOpenBooking={openBooking} />
+        <Hero />
+        <TrustBar />
+        <HowItWorks />
+        <VerifyAndReceive />
+        <Benefits />
+        <Reviews />
+        <DocumentComparison />
+        <Countries />
+        <Airlines />
+        <Personas />
+        <Faq />
+        <FinalCta />
       </main>
-
       <Footer />
-
-      <BookingFormModal isOpen={bookingOpen} onClose={closeBooking} />
+      <MobileCtaBar />
     </div>
   )
 }
