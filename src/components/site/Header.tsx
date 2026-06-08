@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
-import { ArrowRight, BadgeCheck, Menu, Sparkles, X, Zap } from 'lucide-react'
+import { ArrowRight, Menu, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Logo } from './Logo'
-import { NAV_LINKS, SITE } from '@/lib/site-data'
+import { NAV_LINKS } from '@/lib/site-data'
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
@@ -31,44 +31,15 @@ export function Header() {
   return (
     <>
       <header className="pointer-events-none fixed inset-x-0 top-0 z-50">
-        {/* Trust strip - collapses on scroll */}
-        <div
-          className={cn(
-            'header-trust-strip pointer-events-auto overflow-hidden border-b border-primary/10 transition-all duration-300',
-            scrolled ? 'max-h-0 opacity-0' : 'max-h-10 opacity-100'
-          )}
-        >
-          <div className="mx-auto flex h-10 max-w-container items-center justify-center gap-2 px-5 text-xs font-medium sm:gap-4 sm:text-[13px]">
-            <span className="inline-flex items-center gap-1.5 text-foreground/85">
-              <BadgeCheck className="size-3.5 text-primary" />
-              Verifiable PNR
-            </span>
-            <span className="hidden h-3 w-px bg-border sm:block" aria-hidden="true" />
-            <span className="hidden items-center gap-1.5 text-foreground/85 sm:inline-flex">
-              <Zap className="size-3.5 text-primary" />
-              {SITE.delivery}
-            </span>
-            <span className="hidden h-3 w-px bg-border md:block" aria-hidden="true" />
-            <button
-              onClick={() => go('#hero-form')}
-              className="inline-flex items-center gap-1 text-primary transition-colors hover:text-primary/80"
-            >
-              From {SITE.priceFrom}
-              <ArrowRight className="size-3" />
-            </button>
-          </div>
-        </div>
-
-        {/* Floating nav bar */}
         <div
           className={cn(
             'pointer-events-auto px-3 transition-all duration-300 sm:px-4',
-            scrolled ? 'pt-0' : 'pt-2.5 sm:pt-3'
+            scrolled ? 'pt-0' : 'pt-3'
           )}
         >
           <div
             className={cn(
-              'header-shell mx-auto flex h-[3.75rem] max-w-container items-center gap-3 px-3 transition-all duration-300 sm:px-4 lg:px-5',
+              'header-shell mx-auto flex h-16 max-w-container items-center gap-3 px-3 transition-all duration-300 sm:px-4 lg:px-5',
               scrolled ? 'header-shell-scrolled rounded-none' : 'rounded-2xl'
             )}
           >
@@ -78,7 +49,7 @@ export function Header() {
               aria-label="OnwardSky home"
               onClick={() => setOpen(false)}
             >
-              <Logo className="h-7 sm:h-8" />
+              <Logo className="h-11 w-auto sm:h-12" />
             </a>
 
             <nav
@@ -126,7 +97,6 @@ export function Header() {
         </div>
       </header>
 
-      {/* Mobile menu overlay */}
       <div
         className={cn(
           'fixed inset-0 z-40 lg:hidden',
@@ -149,13 +119,6 @@ export function Header() {
             open ? 'translate-y-0 opacity-100' : '-translate-y-2 opacity-0'
           )}
         >
-          <div className="border-b border-border/60 bg-gradient-to-r from-primary/8 via-transparent to-accent/20 px-4 py-3">
-            <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
-              <Sparkles className="size-3.5 text-primary" />
-              Real reservations · Verifiable PNR · {SITE.delivery}
-            </div>
-          </div>
-
           <nav className="flex flex-col gap-1 p-3">
             {NAV_LINKS.map((link) => (
               <button

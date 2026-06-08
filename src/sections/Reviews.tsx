@@ -1,178 +1,202 @@
-import { BadgeCheck, MapPin, Quote } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { BadgeCheck, ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  type CarouselApi,
+} from '@/components/ui/carousel'
 import { Container, Section, SectionHeading, Reveal, Stars } from '@/components/site/primitives'
 import { REVIEWS, SITE } from '@/lib/site-data'
 
 const AVATAR_COLORS = [
-  'from-primary to-[hsl(189_62%_46%)]',
-  'from-[hsl(189_62%_46%)] to-[hsl(201_70%_28%)]',
-  'from-[hsl(201_70%_28%)] to-primary',
-  'from-primary/90 to-[hsl(192_80%_38%)]',
-  'from-[hsl(192_80%_38%)] to-[hsl(201_55%_22%)]',
-  'from-[hsl(201_55%_22%)] to-primary',
+  'bg-[hsl(201_70%_22%)]',
+  'bg-primary',
+  'bg-[hsl(189_62%_46%)]',
+  'bg-[hsl(201_55%_28%)]',
+  'bg-[hsl(192_80%_38%)]',
+  'bg-[hsl(201_70%_28%)]',
 ]
 
-const PERSONA_TAGS: Record<string, string> = {
-  'Digital nomad': 'bg-primary/10 text-primary',
-  Backpacker: 'bg-accent text-accent-foreground',
-  'Visa applicant': 'bg-[hsl(35_92%_45%_/0.12)] text-[hsl(35_72%_38%)]',
-  'Business traveler': 'bg-secondary text-secondary-foreground',
-  Student: 'bg-[hsl(152_55%_36%_/0.12)] text-success',
-}
-
-function RatingPanel() {
+function TrustStrip() {
   return (
-    <div className="rounded-2xl border border-border/80 bg-background/95 p-5 shadow-[0_10px_32px_-22px_hsl(201_50%_20%_/0.22)] sm:p-6">
-      <div className="flex items-end gap-3">
-        <span className="text-5xl font-semibold tracking-tight text-foreground">{SITE.rating}</span>
-        <div className="pb-1.5">
-          <Stars rating={SITE.rating} size={18} />
-          <p className="mt-1 text-sm text-muted-foreground">out of 5</p>
+    <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-center sm:gap-x-12">
+      <div className="flex items-center gap-3">
+        <span className="text-3xl font-semibold tracking-tight">{SITE.rating}</span>
+        <div className="text-left">
+          <Stars rating={SITE.rating} size={15} />
+          <p className="mt-0.5 text-xs text-muted-foreground">Average rating</p>
         </div>
       </div>
-
-      <div className="mt-5 space-y-2">
-        {[
-          { stars: 5, pct: 92 },
-          { stars: 4, pct: 6 },
-          { stars: 3, pct: 2 },
-        ].map((row) => (
-          <div key={row.stars} className="flex items-center gap-2 text-xs">
-            <span className="w-3 font-medium text-muted-foreground">{row.stars}</span>
-            <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-secondary">
-              <div
-                className="h-full rounded-full bg-gradient-to-r from-primary to-[hsl(189_62%_48%)]"
-                style={{ width: `${row.pct}%` }}
-              />
-            </div>
-            <span className="w-8 text-right text-muted-foreground">{row.pct}%</span>
-          </div>
-        ))}
+      <div className="hidden h-8 w-px bg-border sm:block" aria-hidden="true" />
+      <div>
+        <p className="text-lg font-semibold">{SITE.reviewCount.toLocaleString()}+</p>
+        <p className="text-xs text-muted-foreground">Verified reviews</p>
       </div>
-
-      <div className="mt-5 grid grid-cols-2 gap-2 border-t border-border/60 pt-5">
-        <div>
-          <div className="text-lg font-semibold">{SITE.reviewCount.toLocaleString()}+</div>
-          <div className="text-xs text-muted-foreground">Reviews</div>
-        </div>
-        <div>
-          <div className="text-lg font-semibold">{SITE.travelersServed}</div>
-          <div className="text-xs text-muted-foreground">Travelers</div>
-        </div>
-      </div>
-
-      <div className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-success/20 bg-success/10 px-2.5 py-1 text-xs font-medium text-success">
-        <BadgeCheck className="size-3.5" />
-        Verified traveler feedback
+      <div className="hidden h-8 w-px bg-border sm:block" aria-hidden="true" />
+      <div>
+        <p className="text-lg font-semibold">{SITE.travelersServed}</p>
+        <p className="text-xs text-muted-foreground">Travelers served</p>
       </div>
     </div>
   )
 }
 
-function ReviewCard({ review, index, featured = false }: { review: (typeof REVIEWS)[0]; index: number; featured?: boolean }) {
-  const personaClass = PERSONA_TAGS[review.role] ?? 'bg-secondary text-secondary-foreground'
+function SpotlightCarousel() {
+  const [api, setApi] = useState<CarouselApi>()
+  const [current, setCurrent] = useState(0)
+
+  useEffect(() => {
+    if (!api) return
+    const onSelect = () => setCurrent(api.selectedScrollSnap())
+    onSelect()
+    api.on('select', onSelect)
+    return () => {
+      api.off('select', onSelect)
+    }
+  }, [api])
 
   return (
-    <figure
-      className={cn(
-        'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-background/95 transition-all duration-300',
-        featured
-          ? 'p-6 shadow-[0_16px_40px_-24px_hsl(192_60%_35%_/0.28)] sm:p-7'
-          : 'p-5 hover:-translate-y-0.5 hover:border-primary/25 hover:shadow-[0_14px_36px_-22px_hsl(201_50%_20%_/0.2)]'
-      )}
-    >
-      <Quote
-        aria-hidden="true"
-        className={cn(
-          'pointer-events-none absolute text-primary/[0.06] transition-colors group-hover:text-primary/10',
-          featured ? 'right-4 top-4 size-16' : 'right-3 top-3 size-10'
-        )}
-      />
-
-      <div className="relative flex items-center justify-between gap-3">
-        <Stars rating={review.rating} size={featured ? 15 : 13} />
-        <span className={cn('rounded-full px-2.5 py-1 text-[11px] font-medium', personaClass)}>
-          {review.role}
-        </span>
+    <div className="relative">
+      <div className="overflow-hidden border-y border-border/70 bg-secondary/20 px-6 py-10 sm:px-10 sm:py-12">
+        <Carousel setApi={setApi} opts={{ loop: true, align: 'center' }}>
+          <CarouselContent className="-ml-2">
+            {REVIEWS.map((review, index) => (
+              <CarouselItem key={review.name} className="pl-2">
+                <figure className="mx-auto max-w-3xl text-center">
+                  <div className="flex justify-center">
+                    <Stars rating={review.rating} size={16} />
+                  </div>
+                  <blockquote className="mt-5 text-pretty text-xl font-medium leading-snug tracking-tight text-foreground sm:text-2xl sm:leading-snug">
+                    &ldquo;{review.text}&rdquo;
+                  </blockquote>
+                  <figcaption className="mt-8 flex flex-col items-center gap-2 sm:flex-row sm:justify-center sm:gap-3">
+                    <span
+                      className={cn(
+                        'flex size-10 items-center justify-center rounded-full text-sm font-semibold text-white',
+                        AVATAR_COLORS[index % AVATAR_COLORS.length]
+                      )}
+                    >
+                      {review.initials}
+                    </span>
+                    <div className="text-center sm:text-left">
+                      <span className="block text-sm font-semibold">{review.name}</span>
+                      <span className="mt-0.5 flex items-center justify-center gap-1 text-xs text-muted-foreground sm:justify-start">
+                        <MapPin className="size-3 shrink-0" />
+                        {review.location}
+                        <span className="text-border">·</span>
+                        {review.role}
+                      </span>
+                    </div>
+                    {review.rating === 5 ? (
+                      <BadgeCheck className="size-4 text-success sm:ml-1" aria-label="Verified" />
+                    ) : null}
+                  </figcaption>
+                </figure>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </div>
 
-      <blockquote
-        className={cn(
-          'relative mt-4 text-pretty leading-relaxed text-foreground/90',
-          featured ? 'text-base sm:text-[17px]' : 'text-sm'
-        )}
-      >
-        “{review.text}”
-      </blockquote>
-
-      <figcaption className="relative mt-auto flex items-center justify-between gap-3 border-t border-border/60 pt-4">
-        <div className="flex items-center gap-3">
-          <span
-            className={cn(
-              'flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br text-xs font-semibold text-white shadow-sm',
-              AVATAR_COLORS[index % AVATAR_COLORS.length]
-            )}
-          >
-            {review.initials}
-          </span>
-          <span className="leading-tight">
-            <span className="block text-sm font-semibold">{review.name}</span>
-            <span className="mt-0.5 flex items-center gap-1 text-xs text-muted-foreground">
-              <MapPin className="size-3 shrink-0" />
-              {review.location}
-            </span>
-          </span>
+      <div className="mt-6 flex items-center justify-center gap-4">
+        <div className="flex items-center gap-2">
+          {REVIEWS.map((review, index) => (
+            <button
+              key={review.name}
+              type="button"
+              aria-label={`Review from ${review.name}`}
+              onClick={() => api?.scrollTo(index)}
+              className={cn(
+                'h-2 rounded-full transition-all duration-300',
+                index === current ? 'w-7 bg-primary' : 'w-2 bg-border hover:bg-primary/40'
+              )}
+            />
+          ))}
         </div>
-        {review.rating === 5 ? (
-          <BadgeCheck className="size-4 shrink-0 text-success/80" aria-label="Verified review" />
-        ) : null}
-      </figcaption>
-    </figure>
+        <div className="flex items-center gap-1.5">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="size-8 rounded-full"
+            onClick={() => api?.scrollPrev()}
+            aria-label="Previous review"
+          >
+            <ChevronLeft className="size-4" />
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            className="size-8 rounded-full"
+            onClick={() => api?.scrollNext()}
+            aria-label="Next review"
+          >
+            <ChevronRight className="size-4" />
+          </Button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ReviewerTicker() {
+  const items = [...REVIEWS, ...REVIEWS]
+  return (
+    <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_6%,#000_94%,transparent)]">
+      <div className="flex w-max animate-marquee items-center gap-6 py-1">
+        {items.map((review, i) => (
+          <span
+            key={`${review.name}-${i}`}
+            className="inline-flex shrink-0 items-center gap-2 text-sm text-muted-foreground"
+          >
+            <span
+              className={cn(
+                'flex size-7 items-center justify-center rounded-full text-[10px] font-semibold text-white',
+                AVATAR_COLORS[i % REVIEWS.length]
+              )}
+            >
+              {review.initials}
+            </span>
+            <span className="font-medium text-foreground/85">{review.name}</span>
+            <span className="text-border">·</span>
+            <span>{review.location}</span>
+            <Stars rating={review.rating} size={11} className="opacity-80" />
+          </span>
+        ))}
+      </div>
+    </div>
   )
 }
 
 export function Reviews() {
-  const [featured, ...rest] = REVIEWS
-
   return (
     <Section id="reviews" className="overflow-hidden py-14 sm:py-20">
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-grid opacity-35" />
-        <div
-          className="absolute left-[-8%] top-1/2 h-[520px] w-[640px] -translate-y-1/2 rounded-full blur-[120px]"
-          style={{
-            background:
-              'radial-gradient(circle, hsl(189 70% 55% / 0.1), hsl(201 70% 60% / 0.04) 55%, transparent 75%)',
-          }}
-        />
+        <div className="absolute inset-0 bg-dot opacity-25" />
       </div>
 
       <Container>
-        <div className="grid gap-8 lg:grid-cols-[minmax(280px,340px)_1fr] lg:items-start lg:gap-10 xl:gap-12">
-          <div className="lg:sticky lg:top-28">
-            <SectionHeading
-              align="left"
-              eyebrow="Loved by travelers"
-              title="Real travelers, real onward tickets"
-              description="Verified feedback from digital nomads, backpackers and visa applicants who used OnwardSky for proof of onward travel."
-            />
-            <Reveal delay={80} className="mt-6">
-              <RatingPanel />
-            </Reveal>
-          </div>
+        <SectionHeading
+          eyebrow="Loved by travelers"
+          title="Real travelers, real onward tickets"
+          description="Verified feedback from digital nomads, backpackers and visa applicants who used OnwardSky for proof of onward travel."
+        />
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:gap-4">
-            <Reveal delay={100} className="sm:col-span-2">
-              <ReviewCard review={featured} index={0} featured />
-            </Reveal>
+        <Reveal delay={50} className="mt-8">
+          <TrustStrip />
+        </Reveal>
 
-            {rest.map((r, i) => (
-              <Reveal key={r.name} delay={120 + (i % 2) * 70}>
-                <ReviewCard review={r} index={i + 1} />
-              </Reveal>
-            ))}
-          </div>
-        </div>
+        <Reveal delay={90} className="mt-10 sm:mt-12">
+          <SpotlightCarousel />
+        </Reveal>
+
+        <Reveal delay={130} className="mt-10 sm:mt-12">
+          <ReviewerTicker />
+        </Reveal>
       </Container>
     </Section>
   )

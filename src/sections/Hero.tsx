@@ -2,17 +2,18 @@ import { useState } from 'react'
 import {
   ArrowRight,
   ArrowLeftRight,
-  BadgeCheck,
   Calendar,
   Check,
-  CircleDot,
-  Clock,
   Mail,
   MapPin,
-  ShieldCheck,
+  ShieldAlert,
+  Stamp,
+  Ticket,
+  Wallet,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { HeroGlobeBlend } from '@/components/site/backgrounds'
 import { Container, Stars } from '@/components/site/primitives'
 import { SITE } from '@/lib/site-data'
 
@@ -20,6 +21,29 @@ const fieldWrap =
   'group flex items-center gap-2.5 rounded-lg border border-input bg-background px-3 transition-colors focus-within:border-primary/70 focus-within:ring-2 focus-within:ring-primary/15'
 const fieldInput =
   'h-11 w-full bg-transparent text-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none'
+
+const FEARS = [
+  {
+    icon: Ticket,
+    label: 'Denied boarding',
+    tint: 'bg-[hsl(0_72%_50%_/0.08)] text-destructive ring-destructive/15',
+  },
+  {
+    icon: ShieldAlert,
+    label: 'Check-in questions',
+    tint: 'bg-[hsl(35_92%_45%_/0.1)] text-[hsl(35_72%_38%)] ring-[hsl(35_72%_38%_/0.15)]',
+  },
+  {
+    icon: Stamp,
+    label: 'Immigration holds',
+    tint: 'bg-primary/10 text-primary ring-primary/15',
+  },
+  {
+    icon: Wallet,
+    label: 'Costly refundable fares',
+    tint: 'bg-[hsl(201_70%_22%_/0.08)] text-[hsl(201_55%_22%)] ring-[hsl(201_55%_22%_/0.12)]',
+  },
+]
 
 function HeroBookingForm() {
   const [tripType, setTripType] = useState<'one-way' | 'round-trip'>('one-way')
@@ -35,18 +59,21 @@ function HeroBookingForm() {
   }
 
   return (
-    <div id="hero-form" className="card-elevated rounded-2xl p-1.5">
-      <div className="rounded-[14px] border border-border/60 bg-card/50 p-4 sm:p-5">
-        <div className="mb-4 flex items-center justify-between">
+    <div
+      id="hero-form"
+      className="relative z-10 rounded-xl border border-border/45 bg-background/55 p-4 pt-5 shadow-[0_12px_40px_-16px_hsl(201_50%_20%_/0.1)] backdrop-blur-md sm:bg-background/65 sm:p-5 sm:pt-6"
+    >
+      <div>
+        <div className="mb-3 flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <span className="relative flex size-2.5">
               <span className="absolute inline-flex size-full animate-ping rounded-full bg-success/50" />
               <span className="relative inline-flex size-2.5 rounded-full bg-success" />
             </span>
-            <span className="text-sm font-semibold">Build your reservation</span>
+            <span className="text-sm font-semibold">Get your reservation</span>
           </div>
-          <span className="rounded-full border border-border bg-secondary px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
-            No account needed
+          <span className="rounded-full bg-[hsl(201_70%_16%_/0.06)] px-2.5 py-1 text-[11px] font-semibold text-[hsl(201_55%_22%)]">
+            From {SITE.priceFrom}
           </span>
         </div>
 
@@ -55,18 +82,17 @@ function HeroBookingForm() {
             <span className="flex size-12 items-center justify-center rounded-full bg-success/15 text-success">
               <Check className="size-6" />
             </span>
-            <h3 className="text-lg font-semibold">Reservation request received</h3>
+            <h3 className="text-lg font-semibold">Request received</h3>
             <p className="max-w-sm text-sm text-muted-foreground">
-              We’ll email your verifiable itinerary to{' '}
+              Your itinerary goes to{' '}
               <span className="text-foreground">{form.email || 'your inbox'}</span> within minutes.
-              You’ll be able to look up the PNR on the airline’s site.
             </p>
             <Button variant="outline" onClick={() => setSubmitted(false)} className="mt-1">
               Build another
             </Button>
           </div>
         ) : (
-          <form onSubmit={onSubmit} className="flex flex-col gap-3">
+          <form onSubmit={onSubmit} className="flex flex-col gap-2.5">
             <div className="grid grid-cols-2 gap-1 rounded-lg border border-border bg-background p-1">
               {(['one-way', 'round-trip'] as const).map((t) => (
                 <button
@@ -76,7 +102,7 @@ function HeroBookingForm() {
                   className={cn(
                     'rounded-md px-3 py-2 text-sm font-medium transition-colors',
                     tripType === t
-                      ? 'bg-primary text-primary-foreground'
+                      ? 'bg-[hsl(201_70%_22%)] text-white'
                       : 'text-muted-foreground hover:text-foreground'
                   )}
                 >
@@ -85,12 +111,12 @@ function HeroBookingForm() {
               ))}
             </div>
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="grid grid-cols-2 gap-2">
               <label className={fieldWrap}>
                 <MapPin className="size-4 shrink-0 text-muted-foreground" />
                 <input
                   className={fieldInput}
-                  placeholder="From (e.g. LIS)"
+                  placeholder="From"
                   value={form.from}
                   onChange={update('from')}
                   required
@@ -101,7 +127,7 @@ function HeroBookingForm() {
                 <ArrowLeftRight className="size-4 shrink-0 text-muted-foreground" />
                 <input
                   className={fieldInput}
-                  placeholder="To (e.g. BKK)"
+                  placeholder="To"
                   value={form.to}
                   onChange={update('to')}
                   required
@@ -110,7 +136,7 @@ function HeroBookingForm() {
               </label>
             </div>
 
-            <div className={cn('grid grid-cols-1 gap-3', tripType === 'round-trip' && 'sm:grid-cols-2')}>
+            <div className={cn('grid gap-2', tripType === 'round-trip' ? 'grid-cols-2' : 'grid-cols-1')}>
               <label className={fieldWrap}>
                 <Calendar className="size-4 shrink-0 text-muted-foreground" />
                 <input
@@ -149,22 +175,18 @@ function HeroBookingForm() {
               />
             </label>
 
-            <Button type="submit" size="lg" className="mt-1 h-12 w-full text-[15px] font-semibold">
+            <Button
+              type="submit"
+              size="lg"
+              className="mt-0.5 h-12 w-full bg-[hsl(201_70%_22%)] text-[15px] font-semibold hover:bg-[hsl(201_70%_18%)]"
+            >
               Get my reservation
               <ArrowRight className="size-4" />
             </Button>
 
-            <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1 pt-1 text-xs text-muted-foreground">
-              <span className="inline-flex items-center gap-1.5">
-                <Check className="size-3.5 text-success" /> Verifiable PNR
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <Check className="size-3.5 text-success" /> {SITE.delivery}
-              </span>
-              <span className="inline-flex items-center gap-1.5">
-                <Check className="size-3.5 text-success" /> From {SITE.priceFrom}
-              </span>
-            </div>
+            <p className="text-center text-[11px] text-muted-foreground">
+              {SITE.delivery} · No account · Secure checkout
+            </p>
           </form>
         )}
       </div>
@@ -172,12 +194,11 @@ function HeroBookingForm() {
   )
 }
 
-/** Avatars + rating trust cluster. */
 function RatingCluster() {
   const avatars = [
-    { initials: 'MV', bg: 'bg-primary' },
-    { initials: 'DK', bg: 'bg-[hsl(189_62%_46%)]' },
-    { initials: 'PS', bg: 'bg-[hsl(201_70%_20%)]' },
+    { initials: 'MV', bg: 'bg-[hsl(201_70%_22%)]' },
+    { initials: 'DK', bg: 'bg-primary' },
+    { initials: 'PS', bg: 'bg-[hsl(189_62%_46%)]' },
   ]
   return (
     <div className="flex items-center gap-3">
@@ -200,7 +221,7 @@ function RatingCluster() {
           <span className="text-sm font-semibold">{SITE.rating}/5</span>
         </div>
         <span className="text-xs text-muted-foreground">
-          Trusted by {SITE.travelersServed} travelers
+          {SITE.travelersServed} travelers served
         </span>
       </div>
     </div>
@@ -209,77 +230,62 @@ function RatingCluster() {
 
 export function Hero() {
   return (
-    <section id="top" className="relative isolate overflow-hidden pt-28 pb-12 sm:pt-32 lg:pt-36 lg:pb-24">
-      {/* ambient backdrop */}
+    <section
+      id="top"
+      className="relative isolate overflow-hidden pt-[4.75rem] pb-10 sm:pt-24 sm:pb-14 lg:pt-28 lg:pb-20"
+    >
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-grid mask-fade-b opacity-25" />
-
-        {/* primary brand glow, top-right */}
-        <div
-          className="absolute right-[-10%] top-[-14%] h-[620px] w-[820px] rounded-full opacity-90 blur-[120px]"
-          style={{
-            background:
-              'radial-gradient(ellipse at center, hsl(189 75% 60% / 0.18), hsl(192 80% 45% / 0.06) 45%, transparent 72%)',
-          }}
-        />
-        {/* secondary soft glow, lower-left for depth */}
-        <div
-          className="absolute bottom-[-20%] left-[-10%] h-[440px] w-[620px] rounded-full opacity-70 blur-[120px]"
-          style={{ background: 'radial-gradient(circle, hsl(201 70% 60% / 0.1), transparent 65%)' }}
-        />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(201_70%_16%_/0.04)] via-background to-background" />
+        <div className="absolute inset-0 bg-grid mask-fade-b opacity-20" />
       </div>
 
-      <Container>
-        <div className="flex flex-col gap-8 lg:grid lg:grid-cols-[1.05fr_0.95fr] lg:grid-rows-[auto_auto] lg:items-start lg:gap-x-12 lg:gap-y-7">
-          {/* Headline block */}
-          <div className="order-1 flex flex-col items-start lg:col-start-1 lg:row-start-1">
-            <a
-              href="#verification"
-              className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/70 py-1 pl-1 pr-3 text-xs font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              <span className="inline-flex items-center gap-1 rounded-full bg-primary/12 px-2 py-0.5 text-[11px] font-semibold text-primary">
-                <BadgeCheck className="size-3.5" /> Verifiable
-              </span>
-              <span className="hidden sm:inline">Real PNR you can check on the airline’s site</span>
-              <span className="sm:hidden">Real, verifiable PNR</span>
-            </a>
+      <Container className="relative z-10">
+        {/* Mobile: compact hook + form above the fold */}
+        <p className="mb-3 text-center text-sm font-medium text-[hsl(201_55%_22%)] lg:hidden">
+          Don&apos;t risk denied boarding - get a real reservation in minutes
+        </p>
 
-            <h1 className="mt-5 text-balance text-[2rem] font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-[3.4rem]">
-              Proof of onward travel,{' '}
-              <span className="text-gradient-brand">sorted in minutes</span>
+        <div className="grid gap-6 lg:grid-cols-[1.05fr_0.92fr] lg:items-start lg:gap-10 xl:gap-14">
+          {/* Form - first on mobile */}
+          <div className="relative order-1 min-h-[min(420px,88vw)] lg:order-2 lg:sticky lg:top-24 lg:min-h-[460px]">
+            <HeroGlobeBlend className="-inset-x-4 -inset-y-2 sm:-inset-x-6 lg:-inset-x-10 lg:-inset-y-4" />
+            <HeroBookingForm />
+          </div>
+
+          {/* Copy */}
+          <div className="order-2 lg:order-1">
+            <p className="hidden text-sm font-medium text-primary lg:block">
+              Travel compliance infrastructure for onward tickets
+            </p>
+
+            <h1 className="mt-0 text-balance text-[1.75rem] font-semibold leading-[1.08] tracking-tight text-[hsl(201_70%_14%)] sm:text-4xl lg:mt-3 lg:text-[3.15rem]">
+              Stop worrying about check-in.{' '}
+              <span className="text-gradient-brand">Get a real reservation airlines accept.</span>
             </h1>
 
-            <p className="mt-4 max-w-xl text-pretty text-[15px] leading-relaxed text-muted-foreground sm:text-lg">
-              {SITE.name} issues real airline flight reservations with a verifiable PNR - built for
-              airline check-in and proof of onward travel requirements. No commitment to fly.
+            <p className="mt-4 max-w-lg text-pretty text-[15px] leading-relaxed text-muted-foreground sm:text-base">
+              OnwardSky issues genuine airline reservations with a booking reference you can verify
+              yourself - built for onward travel rules, immigration, and visa documentation. From{' '}
+              {SITE.priceFrom}, no ticket purchase required.
             </p>
+
+            <div className="mt-5 flex flex-wrap gap-2">
+              {FEARS.map((fear) => (
+                <span
+                  key={fear.label}
+                  className={cn(
+                    'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium ring-1 ring-inset',
+                    fear.tint
+                  )}
+                >
+                  <fear.icon className="size-3.5" strokeWidth={2} />
+                  {fear.label}
+                </span>
+              ))}
+            </div>
 
             <div className="mt-6">
               <RatingCluster />
-            </div>
-          </div>
-
-          {/* Booking form */}
-          <div className="order-2 w-full lg:col-start-2 lg:row-start-1 lg:row-span-2 lg:self-center">
-            <HeroBookingForm />
-            <p className="mt-3 text-center text-xs text-muted-foreground">
-              Verifiable across {SITE.airlinesSupported} airlines · {SITE.countriesServed} countries
-            </p>
-          </div>
-
-          {/* Proof block */}
-          <div className="order-3 flex flex-col gap-4 lg:col-start-1 lg:row-start-2">
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-              {[
-                { icon: ShieldCheck, label: 'Real airline reservations' },
-                { icon: CircleDot, label: 'Verifiable PNR' },
-                { icon: Clock, label: SITE.delivery },
-              ].map((item) => (
-                <span key={item.label} className="inline-flex items-center gap-2 text-sm text-foreground/85">
-                  <item.icon className="size-4 text-primary" />
-                  {item.label}
-                </span>
-              ))}
             </div>
           </div>
         </div>

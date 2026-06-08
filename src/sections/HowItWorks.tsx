@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowRight,
   BadgeCheck,
@@ -11,17 +12,17 @@ import {
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { Container, Section, SectionHeading, Reveal } from '@/components/site/primitives'
-import { STEPS } from '@/lib/site-data'
+import { SITE, STEPS } from '@/lib/site-data'
 
 const STEP_ICONS: LucideIcon[] = [MapPin, PlaneTakeoff, Search, BadgeCheck]
 
 const HIGHLIGHTS = [
   { icon: Clock, label: 'Under 2 minutes' },
   { icon: Sparkles, label: 'No account needed' },
-  { icon: BadgeCheck, label: 'Real airline PNR' },
+  { icon: BadgeCheck, label: `From ${SITE.priceFrom}` },
 ]
 
-function StepCard({
+function StepContent({
   step,
   icon: Icon,
   isLast,
@@ -31,55 +32,86 @@ function StepCard({
   isLast: boolean
 }) {
   return (
-    <div
-      className={cn(
-        'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-background p-5',
-        'shadow-[inset_0_1px_0_hsl(0_0%_100%_/0.9),0_12px_32px_-24px_hsl(192_60%_35%_/0.3)]',
-        'transition-all duration-300 hover:-translate-y-0.5 hover:border-primary/30',
-        'hover:shadow-[0_20px_44px_-24px_hsl(192_60%_35%_/0.32)]'
-      )}
-    >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-primary/[0.06] via-transparent to-accent/25 opacity-0 transition-opacity group-hover:opacity-100"
-      />
-
-      <div className="relative flex items-start gap-3">
-        <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/12 text-primary ring-1 ring-inset ring-primary/20">
-          <Icon className="size-[1.15rem]" strokeWidth={1.75} />
-        </span>
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center justify-between gap-2">
-            <span className="font-mono text-[11px] font-semibold tracking-wider text-primary/70">
-              Step {step.n}
+    <div className="flex items-start gap-3 pt-1">
+      <Icon className="mt-0.5 size-4 shrink-0 text-primary" strokeWidth={1.75} />
+      <div className="min-w-0 flex-1">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[11px] font-semibold tracking-wider text-primary/70">
+            Step {step.n}
+          </span>
+          {isLast ? (
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-success">
+              <BadgeCheck className="size-3" />
+              Done
             </span>
-            {isLast ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-semibold text-success">
-                <BadgeCheck className="size-3" />
-                Done
-              </span>
-            ) : null}
-          </div>
-          <h3 className="mt-1.5 text-[15px] font-semibold tracking-tight">{step.title}</h3>
-          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
+          ) : null}
         </div>
+        <h3 className="mt-1 text-[15px] font-semibold tracking-tight">{step.title}</h3>
+        <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
       </div>
     </div>
   )
 }
 
-function StepNode({ n }: { n: string }) {
+function StepNode({ n, active = false }: { n: string; active?: boolean }) {
   return (
-    <span className="relative z-10 flex size-11 items-center justify-center rounded-full bg-primary font-mono text-xs font-bold text-primary-foreground shadow-[0_0_0_4px_hsl(var(--background)),0_6px_18px_-4px_hsl(192_86%_31%_/0.5)]">
+    <span
+      className={cn(
+        'relative z-10 flex size-11 items-center justify-center rounded-full font-mono text-xs font-bold text-primary-foreground shadow-[0_0_0_4px_hsl(var(--background)),0_6px_18px_-4px_hsl(192_86%_31%_/0.5)] transition-all duration-500',
+        active ? 'scale-100 bg-primary' : 'scale-95 bg-primary/35'
+      )}
+    >
       {n}
     </span>
   )
 }
 
-/** Desktop + tablet: grid timeline — no absolute positioning. */
+function useTimelineScrollProgress() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    const update = () => {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        setProgress(1)
+        return
+      }
+
+      const rect = el.getBoundingClientRect()
+      const vh = window.innerHeight
+      const start = vh * 0.88
+      const end = vh * 0.32
+      const raw = (start - rect.top) / (start - end)
+      setProgress(Math.min(1, Math.max(0, raw)))
+    }
+
+    update()
+    window.addEventListener('scroll', update, { passive: true })
+    window.addEventListener('resize', update)
+    return () => {
+      window.removeEventListener('scroll', update)
+      window.removeEventListener('resize', update)
+    }
+  }, [])
+
+  return { ref, progress }
+}
+
+function isStepActive(progress: number, index: number, total: number) {
+  if (total <= 1) return progress >= 1
+  const threshold = index / (total - 1)
+  return progress >= threshold - 0.02
+}
+
+/** Desktop + tablet: grid timeline - no absolute positioning. */
 function StepsTimeline() {
+  const { ref, progress } = useTimelineScrollProgress()
+
   return (
-    <>
+    <div ref={ref}>
       {/* Desktop: 4-col timeline */}
       <div className="hidden lg:block">
         <div className="relative mb-6 grid grid-cols-4">
@@ -87,12 +119,14 @@ function StepsTimeline() {
             aria-hidden="true"
             className="absolute left-[12.5%] right-[12.5%] top-[1.375rem] h-0.5 overflow-hidden rounded-full bg-border"
           >
-            <div className="h-full w-full bg-gradient-to-r from-primary/20 via-primary/50 to-primary/25" />
-            <div className="absolute inset-0 bg-[repeating-linear-gradient(90deg,transparent,transparent_8px,hsl(var(--background))_8px,hsl(var(--background))_14px)] opacity-40" />
+            <div
+              className="h-full w-full origin-left rounded-full bg-gradient-to-r from-primary via-[hsl(189_62%_48%)] to-primary/90 motion-reduce:!scale-x-100"
+              style={{ transform: `scaleX(${progress})` }}
+            />
           </div>
           {STEPS.map((step, i) => (
             <Reveal key={step.n} delay={i * 60} className="flex justify-center">
-              <StepNode n={step.n} />
+              <StepNode n={step.n} active={isStepActive(progress, i, STEPS.length)} />
             </Reveal>
           ))}
         </div>
@@ -103,7 +137,7 @@ function StepsTimeline() {
             const isLast = i === STEPS.length - 1
             return (
               <Reveal key={step.n} delay={80 + i * 70} className="h-full">
-                <StepCard step={step} icon={Icon} isLast={isLast} />
+                <StepContent step={step} icon={Icon} isLast={isLast} />
               </Reveal>
             )
           })}
@@ -124,7 +158,7 @@ function StepsTimeline() {
                     <span aria-hidden="true" className="hidden h-px flex-1 bg-gradient-to-r from-primary/30 to-transparent sm:block" />
                   ) : null}
                 </div>
-                <StepCard step={step} icon={Icon} isLast={isLast} />
+                <StepContent step={step} icon={Icon} isLast={isLast} />
               </div>
             </Reveal>
           )
@@ -135,8 +169,13 @@ function StepsTimeline() {
       <div className="relative sm:hidden">
         <div
           aria-hidden="true"
-          className="absolute bottom-2 left-[1.375rem] top-2 w-px bg-gradient-to-b from-primary/35 via-border to-primary/15"
-        />
+          className="absolute bottom-2 left-[1.375rem] top-2 w-px overflow-hidden rounded-full bg-border"
+        >
+          <div
+            className="h-full w-full origin-top rounded-full bg-gradient-to-b from-primary via-[hsl(189_62%_48%)] to-primary/80 motion-reduce:!scale-y-100"
+            style={{ transform: `scaleY(${progress})` }}
+          />
+        </div>
         <div className="flex flex-col gap-4">
           {STEPS.map((step, i) => {
             const Icon = STEP_ICONS[i] ?? MapPin
@@ -145,16 +184,16 @@ function StepsTimeline() {
               <Reveal key={step.n} delay={i * 70}>
                 <div className="relative pl-12">
                   <span className="absolute left-0 top-4">
-                    <StepNode n={step.n} />
+                    <StepNode n={step.n} active={isStepActive(progress, i, STEPS.length)} />
                   </span>
-                  <StepCard step={step} icon={Icon} isLast={isLast} />
+                  <StepContent step={step} icon={Icon} isLast={isLast} />
                 </div>
               </Reveal>
             )
           })}
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
@@ -183,7 +222,7 @@ export function HowItWorks() {
               <span className="text-gradient-brand">four steps</span>
             </>
           }
-          description="A simple, transparent process — no account, no jargon, no commitment to fly."
+          description="A simple, transparent process - no account, no jargon, no commitment to fly."
         />
 
         <Reveal delay={40} className="mt-6 flex flex-wrap items-center justify-center gap-2.5">

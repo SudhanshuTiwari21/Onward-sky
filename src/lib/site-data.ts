@@ -1,6 +1,6 @@
 export const SITE = {
   name: 'OnwardSky',
-  priceFrom: '$8.99',
+  priceFrom: '$9.99',
   delivery: 'Delivered in minutes',
   rating: 4.9,
   reviewCount: 4200,
@@ -65,32 +65,56 @@ export const BENEFITS: Benefit[] = [
   {
     icon: 'zap',
     title: 'Delivered in minutes',
-    desc: 'Most reservations land in your inbox within minutes - built for travelers under time pressure.',
-  },
-  {
-    icon: 'search',
-    title: 'Verifiable PNR',
-    desc: 'Every reservation includes a real booking reference you can look up on the airline’s own site.',
-  },
-  {
-    icon: 'shield',
-    title: 'Real airline reservations',
-    desc: 'Genuine reservations created in airline systems - not edited PDFs or screenshots.',
+    desc: 'Built for travelers at the airport or embassy - most reservations land in your inbox fast.',
   },
   {
     icon: 'globe',
     title: 'Built for compliance',
-    desc: 'Designed for proof of onward travel requirements and airline check-in documentation.',
+    desc: 'Onward travel rules, airline check-in, and visa documentation - one reservation format.',
   },
   {
     icon: 'refresh',
     title: 'Flexible & low cost',
-    desc: 'A fraction of the price of a refundable ticket, with no commitment to fly.',
+    desc: `From ${SITE.priceFrom} - a fraction of a refundable fare, with no commitment to fly.`,
   },
   {
     icon: 'lock',
     title: 'Secure checkout',
     desc: 'Encrypted payments and privacy-first handling of your traveler details.',
+  },
+]
+
+export type ComplianceResource = {
+  title: string
+  desc: string
+  href: string
+  slug: string
+}
+
+export const COMPLIANCE_RESOURCES: ComplianceResource[] = [
+  {
+    title: 'What is proof of onward travel?',
+    desc: 'Why airlines and borders ask for it.',
+    href: '/guides/proof-of-onward-travel/',
+    slug: 'proof-of-onward-travel',
+  },
+  {
+    title: 'What is a dummy ticket?',
+    desc: 'How it differs from a real reservation.',
+    href: '/guides/dummy-ticket/',
+    slug: 'dummy-ticket',
+  },
+  {
+    title: 'How to verify a PNR',
+    desc: 'Check a booking on the airline’s site.',
+    href: '/guides/verify-pnr/',
+    slug: 'verify-pnr',
+  },
+  {
+    title: 'Flight reservation for visa',
+    desc: 'Embassy-ready itinerary format.',
+    href: '/flight-itinerary-for-visa/',
+    slug: 'flight-itinerary-visa',
   },
 ]
 
@@ -248,7 +272,7 @@ export const COMPARISON: ComparisonRow[] = [
   { criteria: 'Verifiable on airline website', onward: true, refundable: true, fake: false },
   { criteria: 'Suitable for proof of onward travel', onward: true, refundable: true, fake: 'Risky' },
   { criteria: 'Suitable for travel documentation', onward: true, refundable: true, fake: 'Risky' },
-  { criteria: 'Typical cost', onward: 'From $8.99', refundable: '$300–$1,500+', fake: 'Varies' },
+  { criteria: 'Typical cost', onward: `From ${SITE.priceFrom}`, refundable: '$300–$1,500+', fake: 'Varies' },
   { criteria: 'Commitment to fly', onward: 'None', refundable: 'None (if refunded in time)', fake: 'None' },
 ]
 

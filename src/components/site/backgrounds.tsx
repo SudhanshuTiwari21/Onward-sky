@@ -28,25 +28,41 @@ const HUBS = [
  * Subtle "global reach" motif: a dotted longitude/latitude sphere.
  * Reads as travel/global without airplane or stock-photo clichés.
  */
-export function GlobeGrid({ className }: { className?: string }) {
+export function GlobeGrid({
+  className,
+  emphasis = 'subtle',
+  blend = false,
+}: {
+  className?: string
+  emphasis?: 'subtle' | 'hero'
+  blend?: boolean
+}) {
+  const uid = useId().replace(/:/g, '')
+  const fadeId = `globeFade-${uid}`
   const meridians = [0.18, 0.38, 0.62, 0.82]
-  const line = 'hsl(196 45% 38% / 0.18)'
+  const line =
+    emphasis === 'hero' ? 'hsl(192 58% 40% / 0.4)' : 'hsl(196 45% 38% / 0.18)'
+  const routeStroke =
+    emphasis === 'hero' ? 'hsl(192 70% 38% / 0.48)' : 'hsl(192 70% 40% / 0.55)'
+  const hubFill = emphasis === 'hero' ? 'hsl(192 70% 40% / 0.55)' : 'hsl(189 62% 46%)'
+  const strokeW = emphasis === 'hero' ? 1.1 : 1
+  const fillOpacity = emphasis === 'hero' ? 0.45 : 0.5
   return (
     <svg
-      className={cn('pointer-events-none select-none', className)}
+      className={cn('pointer-events-none select-none', blend && 'mask-globe-hero', className)}
       viewBox="0 0 400 400"
       fill="none"
       aria-hidden="true"
     >
       <defs>
-        <radialGradient id="globeFade" cx="50%" cy="42%" r="60%">
-          <stop offset="0%" stopColor="hsl(189 62% 48%)" stopOpacity="0.35" />
-          <stop offset="70%" stopColor="hsl(189 62% 48%)" stopOpacity="0.08" />
+        <radialGradient id={fadeId} cx="50%" cy="42%" r="60%">
+          <stop offset="0%" stopColor="hsl(189 62% 48%)" stopOpacity={emphasis === 'hero' ? 0.28 : 0.35} />
+          <stop offset="70%" stopColor="hsl(189 62% 48%)" stopOpacity={emphasis === 'hero' ? 0.12 : 0.08} />
           <stop offset="100%" stopColor="hsl(189 62% 48%)" stopOpacity="0" />
         </radialGradient>
       </defs>
-      <circle cx="200" cy="200" r="160" stroke={line} strokeWidth="1" />
-      <circle cx="200" cy="200" r="160" fill="url(#globeFade)" opacity="0.5" />
+      <circle cx="200" cy="200" r="160" stroke={line} strokeWidth={strokeW} />
+      <circle cx="200" cy="200" r="160" fill={`url(#${fadeId})`} opacity={fillOpacity} />
       {[60, 110, 160, 200, 240, 290, 340].map((cy, i) => {
         const dy = cy - 200
         const ry = Math.max(6, Math.sqrt(Math.max(0, 160 * 160 - dy * dy)))
@@ -59,7 +75,7 @@ export function GlobeGrid({ className }: { className?: string }) {
             ry={ry * 0.26}
             transform={`translate(0 ${dy})`}
             stroke={line}
-            strokeWidth="1"
+            strokeWidth={strokeW}
           />
         )
       })}
@@ -71,19 +87,43 @@ export function GlobeGrid({ className }: { className?: string }) {
           rx={160 * Math.abs(m - 0.5) * 2}
           ry="160"
           stroke={line}
-          strokeWidth="1"
+          strokeWidth={strokeW}
         />
       ))}
-      <circle cx="150" cy="120" r="2.5" fill="hsl(189 62% 46%)" />
-      <circle cx="270" cy="250" r="2.5" fill="hsl(189 62% 46%)" />
+      <circle cx="150" cy="120" r={emphasis === 'hero' ? 2.75 : 2.5} fill={hubFill} />
+      <circle cx="270" cy="250" r={emphasis === 'hero' ? 2.75 : 2.5} fill={hubFill} />
       <path
         d="M150 120 Q 230 150 270 250"
-        stroke="hsl(192 70% 40% / 0.55)"
-        strokeWidth="1.2"
+        stroke={routeStroke}
+        strokeWidth={emphasis === 'hero' ? 1.6 : 1.2}
         strokeDasharray="2 4"
         fill="none"
       />
     </svg>
+  )
+}
+
+/** Layered hero globe — soft glow, radial fade, blends into copy + form column. */
+export function HeroGlobeBlend({ className }: { className?: string }) {
+  return (
+    <div className={cn('pointer-events-none absolute inset-0 z-0 overflow-hidden', className)} aria-hidden="true">
+      <div
+        className="absolute left-[54%] top-[46%] h-[min(420px,95%)] w-[min(420px,95%)] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[72px] sm:left-[56%]"
+        style={{
+          background:
+            'radial-gradient(circle, hsl(189 70% 55% / 0.14) 0%, hsl(192 60% 45% / 0.06) 45%, transparent 72%)',
+        }}
+      />
+      <GlobeGrid
+        emphasis="hero"
+        blend
+        className="absolute left-[54%] top-[44%] h-[min(400px,92%)] w-[min(400px,92%)] -translate-x-1/2 -translate-y-1/2 opacity-90 sm:left-[56%] lg:h-[min(440px,100%)] lg:w-[min(440px,100%)]"
+      />
+      <div className="absolute inset-y-0 left-0 w-[42%] bg-gradient-to-r from-background from-30% via-background/70 to-transparent" />
+      <div className="absolute inset-y-0 right-0 w-[18%] bg-gradient-to-l from-background/80 to-transparent" />
+      <div className="absolute inset-x-[-8%] bottom-0 h-28 bg-gradient-to-t from-background via-background/60 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-background/70 to-transparent" />
+    </div>
   )
 }
 
@@ -146,7 +186,7 @@ export function AnimatedGlobeBackground({ className }: { className?: string }) {
           })}
         </g>
 
-        {/* Meridians — counter-rotate inside the spinning wrapper for parallax */}
+        {/* Meridians - counter-rotate inside the spinning wrapper for parallax */}
         <g
           className="motion-safe:animate-globe-spin-reverse"
           style={{ transformOrigin: '200px 200px' }}

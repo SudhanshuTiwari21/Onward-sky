@@ -142,6 +142,83 @@ export function Reveal({
   )
 }
 
+/** Vertical list with hairline dividers — no card chrome. */
+export function DividerList({
+  className,
+  children,
+}: {
+  className?: string
+  children: React.ReactNode
+}) {
+  return <div className={cn('divide-y divide-border/70', className)}>{children}</div>
+}
+
+/** Full-width link row for directories (countries, airlines, personas). */
+export function LinkRow({
+  href,
+  className,
+  children,
+}: {
+  href: string
+  className?: string
+  children: React.ReactNode
+}) {
+  return (
+    <a
+      href={href}
+      className={cn(
+        'group flex items-center gap-4 py-4 transition-colors hover:bg-secondary/40 sm:py-5',
+        className
+      )}
+    >
+      {children}
+    </a>
+  )
+}
+
+/** Icon + title + description row — for features, benefits, delivery items. */
+export function FeatureRow({
+  icon: Icon,
+  title,
+  description,
+  className,
+}: {
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>
+  title: string
+  description: string
+  className?: string
+}) {
+  return (
+    <div className={cn('flex gap-4 py-5 sm:py-6', className)}>
+      <Icon className="mt-0.5 size-5 shrink-0 text-primary" strokeWidth={1.75} />
+      <div className="min-w-0">
+        <h3 className="text-sm font-semibold tracking-tight sm:text-base">{title}</h3>
+        <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{description}</p>
+      </div>
+    </div>
+  )
+}
+
+/** Left-accent block — for callouts without a card frame. */
+export function AccentBlock({
+  className,
+  children,
+}: {
+  className?: string
+  children: React.ReactNode
+}) {
+  return (
+    <div
+      className={cn(
+        'border-l-2 border-primary/40 pl-4 sm:pl-5',
+        className
+      )}
+    >
+      {children}
+    </div>
+  )
+}
+
 export function Stars({
   rating = 5,
   className,

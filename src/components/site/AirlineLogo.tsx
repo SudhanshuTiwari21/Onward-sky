@@ -18,7 +18,7 @@ export function AirlineLogo({
   code?: string
   /** When true (default), show the logo in full brand color. */
   colorful?: boolean
-  /** Fit inside a fixed badge — scales down without overflowing. */
+  /** Fit inside a fixed badge - scales down without overflowing. */
   contained?: boolean
   className?: string
 }) {
@@ -62,7 +62,7 @@ export function AirlineLogo({
   )
 }
 
-/** Circular badge for airline cards — clips and centers the logo. */
+/** Circular badge for airline cards - clips and centers the logo. */
 export function AirlineLogoBadge({
   name,
   logo,

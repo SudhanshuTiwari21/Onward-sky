@@ -1,7 +1,15 @@
 import { ArrowUpRight, Globe2, MapPinned, ShieldAlert } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Container, Section, SectionHeading, Reveal } from '@/components/site/primitives'
+import {
+  AccentBlock,
+  Container,
+  DividerList,
+  LinkRow,
+  Section,
+  SectionHeading,
+  Reveal,
+} from '@/components/site/primitives'
 import { COUNTRIES, SITE } from '@/lib/site-data'
 
 const REGIONS: Record<string, string> = {
@@ -29,63 +37,12 @@ const ENFORCEMENT: Record<string, { label: string; tone: 'high' | 'medium' | 'mo
 }
 
 const TONE_CLASS = {
-  high: 'bg-[hsl(0_72%_50%_/0.1)] text-destructive border-destructive/20',
-  medium: 'bg-warning/10 text-[hsl(35_72%_38%)] border-warning/25',
-  moderate: 'bg-primary/10 text-primary border-primary/20',
+  high: 'text-destructive',
+  medium: 'text-[hsl(35_72%_38%)]',
+  moderate: 'text-primary',
 }
 
 const REGION_CHIPS = ['Southeast Asia', 'East Asia', 'Central America', 'South America']
-
-function CountryCard({ country }: { country: (typeof COUNTRIES)[0] }) {
-  const region = REGIONS[country.slug] ?? 'Worldwide'
-  const enforcement = ENFORCEMENT[country.slug] ?? { label: 'Requirements vary', tone: 'moderate' as const }
-
-  return (
-    <a
-      href={`/countries/${country.slug}/`}
-      className={cn(
-        'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-background/95 p-4 transition-all duration-300 sm:p-5',
-        'hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_16px_40px_-24px_hsl(192_60%_35%_/0.28)]'
-      )}
-    >
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-1 -top-2 select-none text-6xl opacity-[0.07] transition-opacity group-hover:opacity-[0.12]"
-      >
-        {country.flag}
-      </span>
-
-      <div className="relative flex items-start justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-secondary text-2xl shadow-sm ring-1 ring-inset ring-border/80">
-            {country.flag}
-          </span>
-          <div>
-            <h3 className="text-sm font-semibold tracking-tight sm:text-base">{country.name}</h3>
-            <p className="text-[11px] font-medium text-muted-foreground">{region}</p>
-          </div>
-        </div>
-        <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary" />
-      </div>
-
-      <p className="relative mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">{country.note}</p>
-
-      <div className="relative mt-4 flex items-center justify-between gap-2 border-t border-border/60 pt-3">
-        <span
-          className={cn(
-            'inline-flex items-center rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
-            TONE_CLASS[enforcement.tone]
-          )}
-        >
-          {enforcement.label}
-        </span>
-        <span className="text-[11px] font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
-          View guide
-        </span>
-      </div>
-    </a>
-  )
-}
 
 export function Countries() {
   return (
@@ -111,37 +68,35 @@ export function Countries() {
               description="Onward travel rules vary by destination. Explore requirements for popular countries."
             />
 
-            <Reveal delay={80} className="mt-6 space-y-4">
-              <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-xl border border-border/80 bg-background/95 p-4">
+            <Reveal delay={80} className="mt-6 space-y-5">
+              <div className="flex flex-wrap gap-x-8 gap-y-3 border-y border-border/70 py-4">
+                <div>
                   <div className="text-2xl font-semibold tracking-tight">{SITE.countriesServed}</div>
-                  <div className="mt-1 text-xs text-muted-foreground">Countries covered</div>
+                  <div className="mt-0.5 text-xs text-muted-foreground">Countries covered</div>
                 </div>
-                <div className="rounded-xl border border-border/80 bg-background/95 p-4">
+                <div>
                   <div className="text-2xl font-semibold tracking-tight">{COUNTRIES.length}</div>
-                  <div className="mt-1 text-xs text-muted-foreground">Featured guides</div>
+                  <div className="mt-0.5 text-xs text-muted-foreground">Featured guides</div>
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-border/80 bg-background/95 p-4 sm:p-5">
+              <AccentBlock>
                 <div className="flex items-start gap-3">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/12 text-primary ring-1 ring-inset ring-primary/20">
-                    <ShieldAlert className="size-4" />
-                  </span>
+                  <ShieldAlert className="mt-0.5 size-4 shrink-0 text-primary" />
                   <p className="text-sm leading-relaxed text-muted-foreground">
                     Airlines and border officials enforce onward travel differently by destination -
                     check the guide before you fly.
                   </p>
                 </div>
-              </div>
+              </AccentBlock>
 
               <div className="flex flex-wrap gap-2">
                 {REGION_CHIPS.map((region) => (
                   <span
                     key={region}
-                    className="inline-flex items-center gap-1 rounded-full border border-border bg-secondary/60 px-2.5 py-1 text-[11px] font-medium text-muted-foreground"
+                    className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground"
                   >
-                    <MapPinned className="size-3" />
+                    <MapPinned className="size-3 text-primary/70" />
                     {region}
                   </span>
                 ))}
@@ -171,13 +126,41 @@ export function Countries() {
               </a>
             </Reveal>
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              {COUNTRIES.map((c, i) => (
-                <Reveal key={c.slug} delay={(i % 3) * 60}>
-                  <CountryCard country={c} />
-                </Reveal>
-              ))}
-            </div>
+            <Reveal delay={120}>
+              <DividerList>
+                {COUNTRIES.map((country) => {
+                  const region = REGIONS[country.slug] ?? 'Worldwide'
+                  const enforcement = ENFORCEMENT[country.slug] ?? {
+                    label: 'Requirements vary',
+                    tone: 'moderate' as const,
+                  }
+
+                  return (
+                    <LinkRow key={country.slug} href={`/countries/${country.slug}/`}>
+                      <span className="text-2xl leading-none">{country.flag}</span>
+                      <span className="min-w-0 flex-1">
+                        <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                          <span className="text-sm font-semibold text-foreground group-hover:text-primary sm:text-base">
+                            {country.name}
+                          </span>
+                          <span className="text-[11px] text-muted-foreground">{region}</span>
+                        </span>
+                        <span className="mt-1 block text-sm text-muted-foreground">{country.note}</span>
+                        <span
+                          className={cn(
+                            'mt-1.5 inline-block text-[11px] font-semibold uppercase tracking-wide',
+                            TONE_CLASS[enforcement.tone]
+                          )}
+                        >
+                          {enforcement.label}
+                        </span>
+                      </span>
+                      <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary" />
+                    </LinkRow>
+                  )
+                })}
+              </DividerList>
+            </Reveal>
 
             <Reveal delay={240} className="mt-5 flex justify-center lg:hidden">
               <Button asChild variant="outline" className="font-semibold">

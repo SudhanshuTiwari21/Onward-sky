@@ -1,6 +1,13 @@
 import { ArrowRight, BadgeCheck, CircleHelp, Clock, MessageCircle, Search, ShieldCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Container, Section, SectionHeading, Reveal } from '@/components/site/primitives'
+import {
+  AccentBlock,
+  Container,
+  DividerList,
+  Section,
+  SectionHeading,
+  Reveal,
+} from '@/components/site/primitives'
 import {
   Accordion,
   AccordionContent,
@@ -52,12 +59,10 @@ export function Faq() {
               description="Straight answers about how OnwardSky reservations work and where they're suitable."
             />
 
-            <Reveal delay={80} className="mt-6 space-y-4">
-              <div className="rounded-2xl border border-border/80 bg-background/95 p-4 sm:p-5">
+            <Reveal delay={80} className="mt-6 space-y-5">
+              <AccentBlock>
                 <div className="flex items-start gap-3">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/12 text-primary ring-1 ring-inset ring-primary/20">
-                    <CircleHelp className="size-4" />
-                  </span>
+                  <CircleHelp className="mt-0.5 size-4 shrink-0 text-primary" />
                   <div>
                     <p className="text-sm font-semibold">{FAQS.length} common questions</p>
                     <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
@@ -66,14 +71,14 @@ export function Faq() {
                     </p>
                   </div>
                 </div>
-              </div>
+              </AccentBlock>
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="flex flex-wrap gap-x-4 gap-y-2">
                 {QUICK_TOPICS.map((topic) => (
                   <a
                     key={topic.label}
                     href={topic.href}
-                    className="flex items-center gap-2 rounded-xl border border-border/80 bg-background/95 px-3 py-3 text-xs font-medium text-foreground/85 transition-colors hover:border-primary/25 hover:bg-background"
+                    className="inline-flex items-center gap-1.5 text-xs font-medium text-foreground/85 transition-colors hover:text-primary"
                   >
                     <topic.icon className="size-3.5 shrink-0 text-primary" />
                     {topic.label}
@@ -81,7 +86,7 @@ export function Faq() {
                 ))}
               </div>
 
-              <div className="rounded-2xl border border-primary/20 bg-gradient-to-br from-primary/10 via-background to-accent/15 p-4 sm:p-5">
+              <AccentBlock className="border-primary/50">
                 <div className="flex items-start gap-3">
                   <MessageCircle className="mt-0.5 size-4 shrink-0 text-primary" />
                   <div>
@@ -95,31 +100,29 @@ export function Faq() {
                     </Button>
                   </div>
                 </div>
-              </div>
+              </AccentBlock>
             </Reveal>
           </div>
 
           <Reveal delay={100}>
-            <Accordion type="single" collapsible className="w-full space-y-3">
-              {FAQS.map((f, i) => (
-                <AccordionItem
-                  key={f.q}
-                  value={`faq-${i}`}
-                  className="overflow-hidden rounded-2xl border border-border/80 bg-background/95 px-1 shadow-[0_8px_24px_-20px_hsl(201_50%_20%_/0.18)] data-[state=open]:border-primary/25 data-[state=open]:shadow-[0_14px_32px_-22px_hsl(192_60%_35%_/0.22)]"
-                >
-                  <AccordionTrigger className="gap-4 px-4 py-4 text-left hover:no-underline sm:px-5">
-                    <span className="flex min-w-0 flex-1 items-start gap-3">
-                      <span className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-lg bg-primary/10 font-mono text-[11px] font-semibold text-primary">
-                        {String(i + 1).padStart(2, '0')}
+            <Accordion type="single" collapsible className="w-full">
+              <DividerList>
+                {FAQS.map((f, i) => (
+                  <AccordionItem key={f.q} value={`faq-${i}`} className="border-0">
+                    <AccordionTrigger className="gap-4 py-4 text-left hover:no-underline sm:py-5">
+                      <span className="flex min-w-0 flex-1 items-start gap-3">
+                        <span className="mt-0.5 font-mono text-[11px] font-semibold text-primary/70">
+                          {String(i + 1).padStart(2, '0')}
+                        </span>
+                        <span className="text-base font-semibold leading-snug">{f.q}</span>
                       </span>
-                      <span className="text-base font-semibold leading-snug">{f.q}</span>
-                    </span>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-4 pb-5 text-sm leading-relaxed text-muted-foreground sm:px-5 sm:pl-[3.75rem]">
-                    {f.a}
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
+                    </AccordionTrigger>
+                    <AccordionContent className="pb-5 pl-8 text-sm leading-relaxed text-muted-foreground sm:pl-9">
+                      {f.a}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </DividerList>
             </Accordion>
           </Reveal>
         </div>

@@ -2,7 +2,15 @@ import { ArrowUpRight, Plane, ShieldCheck, TicketCheck } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { AirlineLogoBadge } from '@/components/site/AirlineLogo'
-import { Container, Section, SectionHeading, Reveal } from '@/components/site/primitives'
+import {
+  AccentBlock,
+  Container,
+  DividerList,
+  LinkRow,
+  Section,
+  SectionHeading,
+  Reveal,
+} from '@/components/site/primitives'
 import { AIRLINES, SITE } from '@/lib/site-data'
 
 const CATEGORIES: Record<string, { label: string; tone: 'budget' | 'full' | 'regional' }> = {
@@ -20,84 +28,12 @@ const CATEGORIES: Record<string, { label: string; tone: 'budget' | 'full' | 'reg
 }
 
 const TONE_CLASS = {
-  budget: 'bg-accent text-accent-foreground border-border',
-  full: 'bg-primary/10 text-primary border-primary/20',
-  regional: 'bg-secondary text-secondary-foreground border-border',
+  budget: 'text-accent-foreground',
+  full: 'text-primary',
+  regional: 'text-muted-foreground',
 }
 
 const TYPE_CHIPS = ['Low-cost carriers', 'Full-service', 'Americas network']
-
-function AirlineCard({ airline }: { airline: (typeof AIRLINES)[0] }) {
-  const category = CATEGORIES[airline.slug] ?? { label: 'Global carrier', tone: 'full' as const }
-
-  return (
-    <a
-      href={`/airlines/${airline.slug}/`}
-      className={cn(
-        'group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/80 bg-background/95 p-4 transition-all duration-300 sm:p-5',
-        'hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-[0_16px_40px_-24px_hsl(192_60%_35%_/0.28)]'
-      )}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <AirlineLogoBadge name={airline.name} logo={airline.logo} code={airline.code} />
-        <span className="rounded-md bg-foreground/[0.04] px-2 py-1 font-mono text-[11px] font-semibold tracking-wide text-muted-foreground ring-1 ring-inset ring-border/80">
-          {airline.code}
-        </span>
-      </div>
-
-      <div className="mt-4 flex flex-1 flex-col">
-        <div className="flex items-center justify-between gap-2">
-          <h3 className="text-sm font-semibold tracking-tight sm:text-base">{airline.name}</h3>
-          <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary" />
-        </div>
-
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <span
-            className={cn(
-              'inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide',
-              TONE_CLASS[category.tone]
-            )}
-          >
-            {category.label}
-          </span>
-          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground">
-            <TicketCheck className="size-3 text-primary/70" />
-            Check-in check
-          </span>
-        </div>
-      </div>
-
-      <div className="mt-4 border-t border-border/60 pt-3 text-[11px] font-medium text-primary opacity-0 transition-opacity group-hover:opacity-100">
-        View airline requirements
-      </div>
-    </a>
-  )
-}
-
-function BrowseAllCard() {
-  return (
-    <a
-      href="/airlines/"
-      className={cn(
-        'group flex h-full min-h-[168px] flex-col items-center justify-center rounded-2xl border border-dashed border-primary/35',
-        'bg-gradient-to-br from-primary/10 via-background to-accent/15 p-5 text-center transition-all duration-300',
-        'hover:-translate-y-0.5 hover:border-primary/50 hover:shadow-[0_16px_40px_-24px_hsl(192_60%_35%_/0.28)]'
-      )}
-    >
-      <span className="flex size-12 items-center justify-center rounded-full bg-primary/15 text-primary ring-1 ring-inset ring-primary/20">
-        <Plane className="size-5" />
-      </span>
-      <h3 className="mt-4 text-base font-semibold">{SITE.airlinesSupported} airlines</h3>
-      <p className="mt-1 max-w-[12rem] text-sm text-muted-foreground">
-        Browse requirements for every carrier we support
-      </p>
-      <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-primary">
-        All airlines
-        <ArrowUpRight className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-      </span>
-    </a>
-  )
-}
 
 export function Airlines() {
   return (
@@ -123,37 +59,35 @@ export function Airlines() {
               description="Many carriers verify proof of onward travel at check-in. See what each airline expects."
             />
 
-            <Reveal delay={80} className="mt-6 space-y-4">
-              <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-xl border border-border/80 bg-background/95 p-4">
+            <Reveal delay={80} className="mt-6 space-y-5">
+              <div className="flex flex-wrap gap-x-8 gap-y-3 border-y border-border/70 py-4">
+                <div>
                   <div className="text-2xl font-semibold tracking-tight">{SITE.airlinesSupported}</div>
-                  <div className="mt-1 text-xs text-muted-foreground">Airlines supported</div>
+                  <div className="mt-0.5 text-xs text-muted-foreground">Airlines supported</div>
                 </div>
-                <div className="rounded-xl border border-border/80 bg-background/95 p-4">
+                <div>
                   <div className="text-2xl font-semibold tracking-tight">{AIRLINES.length}</div>
-                  <div className="mt-1 text-xs text-muted-foreground">Featured carriers</div>
+                  <div className="mt-0.5 text-xs text-muted-foreground">Featured carriers</div>
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-border/80 bg-background/95 p-4 sm:p-5">
+              <AccentBlock>
                 <div className="flex items-start gap-3">
-                  <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/12 text-primary ring-1 ring-inset ring-primary/20">
-                    <ShieldCheck className="size-4" />
-                  </span>
+                  <ShieldCheck className="mt-0.5 size-4 shrink-0 text-primary" />
                   <p className="text-sm leading-relaxed text-muted-foreground">
                     Low-cost and full-service carriers alike may refuse boarding without proof of
                     onward travel - check your airline before departure.
                   </p>
                 </div>
-              </div>
+              </AccentBlock>
 
               <div className="flex flex-wrap gap-2">
                 {TYPE_CHIPS.map((type) => (
                   <span
                     key={type}
-                    className="inline-flex items-center gap-1 rounded-full border border-border bg-secondary/60 px-2.5 py-1 text-[11px] font-medium text-muted-foreground"
+                    className="inline-flex items-center gap-1 text-[11px] font-medium text-muted-foreground"
                   >
-                    <Plane className="size-3" />
+                    <Plane className="size-3 text-primary/70" />
                     {type}
                   </span>
                 ))}
@@ -183,16 +117,51 @@ export function Airlines() {
               </a>
             </Reveal>
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-              {AIRLINES.map((a, i) => (
-                <Reveal key={a.slug} delay={(i % 3) * 60}>
-                  <AirlineCard airline={a} />
-                </Reveal>
-              ))}
-              <Reveal delay={180} className="sm:col-span-2 xl:col-span-1">
-                <BrowseAllCard />
-              </Reveal>
-            </div>
+            <Reveal delay={120}>
+              <DividerList>
+                {AIRLINES.map((airline) => {
+                  const category = CATEGORIES[airline.slug] ?? {
+                    label: 'Global carrier',
+                    tone: 'full' as const,
+                  }
+
+                  return (
+                    <LinkRow key={airline.slug} href={`/airlines/${airline.slug}/`}>
+                      <AirlineLogoBadge name={airline.name} logo={airline.logo} code={airline.code} />
+                      <span className="min-w-0 flex-1">
+                        <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
+                          <span className="text-sm font-semibold text-foreground group-hover:text-primary sm:text-base">
+                            {airline.name}
+                          </span>
+                          <span className="font-mono text-[11px] text-muted-foreground">{airline.code}</span>
+                        </span>
+                        <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px]">
+                          <span className={cn('font-semibold uppercase tracking-wide', TONE_CLASS[category.tone])}>
+                            {category.label}
+                          </span>
+                          <span className="inline-flex items-center gap-1 text-muted-foreground">
+                            <TicketCheck className="size-3 text-primary/70" />
+                            Check-in check
+                          </span>
+                        </span>
+                      </span>
+                      <ArrowUpRight className="size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-primary" />
+                    </LinkRow>
+                  )
+                })}
+
+                <LinkRow href="/airlines/" className="text-primary">
+                  <Plane className="size-5 shrink-0" />
+                  <span className="min-w-0 flex-1">
+                    <span className="block text-sm font-semibold">All {SITE.airlinesSupported} airlines</span>
+                    <span className="mt-0.5 block text-xs text-muted-foreground">
+                      Browse requirements for every carrier we support
+                    </span>
+                  </span>
+                  <ArrowUpRight className="size-4 shrink-0" />
+                </LinkRow>
+              </DividerList>
+            </Reveal>
 
             <Reveal delay={240} className="mt-5 flex justify-center lg:hidden">
               <Button asChild variant="outline" className="font-semibold">

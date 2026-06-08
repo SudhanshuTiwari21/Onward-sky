@@ -2,9 +2,10 @@ import { Header } from '@/components/site/Header'
 import { MobileCtaBar } from '@/components/site/MobileCtaBar'
 import { Hero } from '@/sections/Hero'
 import { TrustBar } from '@/sections/TrustBar'
-import { Reviews } from '@/sections/Reviews'
-import { HowItWorks } from '@/sections/HowItWorks'
 import { VerifyAndReceive } from '@/sections/VerifyAndReceive'
+import { ComplianceResources } from '@/sections/ComplianceResources'
+import { HowItWorks } from '@/sections/HowItWorks'
+import { Reviews } from '@/sections/Reviews'
 import { Benefits } from '@/sections/Benefits'
 import { DocumentComparison } from '@/sections/DocumentComparison'
 import { Countries } from '@/sections/Countries'
@@ -21,8 +22,9 @@ export default function App() {
       <main>
         <Hero />
         <TrustBar />
-        <HowItWorks />
         <VerifyAndReceive />
+        <ComplianceResources />
+        <HowItWorks />
         <Benefits />
         <Reviews />
         <DocumentComparison />

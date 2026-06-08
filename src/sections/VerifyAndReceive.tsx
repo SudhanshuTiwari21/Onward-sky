@@ -15,7 +15,8 @@ import {
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { BrandMark } from '@/components/site/Logo'
-import { Container, Section, SectionHeading, Reveal } from '@/components/site/primitives'
+import { Container, DividerList, FeatureRow, Section, SectionHeading, Reveal } from '@/components/site/primitives'
+import { SITE } from '@/lib/site-data'
 
 const PNR = 'K7G2QP'
 
@@ -24,49 +25,28 @@ const DELIVERY_ITEMS = [
     icon: FileText,
     title: 'Airline-standard PDF',
     desc: 'Formatted like a real e-ticket receipt agents recognize at check-in.',
-    tone: 'teal' as const,
   },
   {
     icon: Search,
-    title: 'Genuine booking reference',
-    desc: 'A 6-character PNR you can look up on the airline’s manage-booking page.',
-    tone: 'navy' as const,
+    title: 'Booking reference (PNR)',
+    desc: 'Look it up on the airline’s manage-booking page yourself.',
   },
   {
     icon: ShieldCheck,
     title: 'Full flight details',
-    desc: 'Passenger name, route, dates, flight number and airline in one document.',
-    tone: 'teal' as const,
+    desc: 'Passenger, route, dates, flight number and airline in one document.',
   },
   {
     icon: Mail,
     title: 'Delivered in minutes',
-    desc: 'PDF lands in your inbox fast — save it or forward to an agent.',
-    tone: 'navy' as const,
-  },
-  {
-    icon: BadgeCheck,
-    title: 'Live airline confirmation',
-    desc: 'The PNR resolves in the airline’s own system — not a screenshot.',
-    tone: 'teal' as const,
-  },
-  {
-    icon: Globe,
-    title: 'Global PNR lookup',
-    desc: 'Works across GDS systems used by airlines and travel agents worldwide.',
-    tone: 'navy' as const,
+    desc: 'PDF to your inbox - save it or forward to an agent.',
   },
 ]
 
-const TONE_CLASS = {
-  teal: 'from-primary/12 to-accent/20 border-primary/20',
-  navy: 'from-[hsl(201_70%_20%_/0.06)] to-secondary/40 border-border/80',
-}
-
 function BrowserChrome({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-border/80 bg-background shadow-[0_24px_60px_-32px_hsl(201_50%_20%_/0.35)] ring-1 ring-inset ring-border/60">
-      <div className="flex items-center gap-2 border-b border-border/80 bg-secondary/50 px-4 py-3">
+    <div className="overflow-hidden border-y border-border bg-background">
+      <div className="flex items-center gap-2 border-b border-border bg-secondary/40 px-4 py-3">
         <span className="size-2.5 rounded-full bg-destructive/70" />
         <span className="size-2.5 rounded-full bg-warning/70" />
         <span className="size-2.5 rounded-full bg-success/70" />
@@ -84,13 +64,8 @@ function BrowserChrome({ children }: { children: React.ReactNode }) {
 
 function ItineraryVisual({ className }: { className?: string }) {
   return (
-    <div
-      className={cn(
-        'overflow-hidden rounded-2xl border border-border/80 bg-background shadow-[0_24px_60px_-32px_hsl(201_50%_20%_/0.35)] ring-1 ring-inset ring-border/60',
-        className
-      )}
-    >
-      <div className="relative border-b border-border/80 bg-gradient-to-r from-primary/10 via-secondary/50 to-accent/30 px-4 py-4 sm:px-5">
+    <div className={cn('overflow-hidden border-y border-border bg-background', className)}>
+      <div className="relative border-b border-border bg-secondary/30 px-4 py-4 sm:px-5">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 opacity-50"
@@ -133,7 +108,7 @@ function ItineraryVisual({ className }: { className?: string }) {
           ))}
         </div>
 
-        <div className="rounded-xl border border-border/80 bg-gradient-to-br from-background to-secondary/40 p-3.5">
+        <div className="border-y border-border/60 bg-secondary/20 py-3.5">
           <div className="flex items-center justify-between gap-2">
             <div>
               <div className="text-xl font-semibold tracking-tight">LIS</div>
@@ -182,7 +157,7 @@ function AirlineLookupVisual({ className }: { className?: string }) {
           </span>
         </div>
 
-        <div className="rounded-xl border border-success/25 bg-success/[0.04] p-3.5 ring-1 ring-inset ring-success/15">
+        <div className="border-y border-success/25 bg-success/[0.04] py-3.5">
           <div className="flex items-center justify-between gap-2">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Reservation status
@@ -226,7 +201,7 @@ function AirlineLookupVisual({ className }: { className?: string }) {
         </div>
 
         <p className="text-center text-[11px] text-muted-foreground">
-          Same reference on the airline site — not a mock PDF.
+          Same reference on the airline site - not a mock PDF.
         </p>
       </div>
     </BrowserChrome>
@@ -245,7 +220,7 @@ function PnrBridge() {
         className="absolute left-1/2 top-4 h-[calc(100%-2rem)] w-px -translate-x-1/2 bg-gradient-to-b from-primary/20 via-primary/45 to-primary/20 lg:hidden"
       />
 
-      <div className="relative z-10 flex flex-col items-center gap-2 rounded-2xl border border-primary/30 bg-background/95 px-4 py-3 shadow-[0_12px_32px_-16px_hsl(192_86%_31%_/0.45)] backdrop-blur-sm">
+      <div className="relative z-10 flex flex-col items-center gap-2 border-y border-primary/30 bg-background px-4 py-3">
         <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
           <Sparkles className="size-3" />
           Same PNR
@@ -298,11 +273,11 @@ export function VerifyAndReceive() {
           }
           title={
             <>
-              Real itinerary.{' '}
-              <span className="text-gradient-brand">Verifiable PNR.</span>
+              Your PDF.{' '}
+              <span className="text-gradient-brand">The airline’s confirmation.</span>
             </>
           }
-          description="You receive a professional PDF — then confirm the same booking reference on the airline’s own site. No screenshots, no guesswork."
+          description="See what lands in your inbox - then check the same booking reference on the carrier’s site."
         />
 
         {/* Mobile tab switcher */}
@@ -366,28 +341,18 @@ export function VerifyAndReceive() {
           </p>
         </Reveal>
 
-        {/* Feature bento */}
-        <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-4">
-          {DELIVERY_ITEMS.map((item, i) => (
-            <Reveal key={item.title} delay={120 + i * 50}>
-              <div
-                className={cn(
-                  'group relative flex h-full gap-3 overflow-hidden rounded-2xl border bg-gradient-to-br p-4 transition-all duration-300 sm:p-5',
-                  TONE_CLASS[item.tone],
-                  'hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-24px_hsl(192_60%_35%_/0.28)]'
-                )}
-              >
-                <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-background/80 text-primary ring-1 ring-inset ring-primary/15">
-                  <item.icon className="size-4" strokeWidth={1.75} />
-                </span>
-                <div>
-                  <h3 className="text-sm font-semibold tracking-tight">{item.title}</h3>
-                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{item.desc}</p>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+        <Reveal delay={120} className="mt-10 lg:mt-12">
+          <DividerList>
+            {DELIVERY_ITEMS.map((item) => (
+              <FeatureRow
+                key={item.title}
+                icon={item.icon}
+                title={item.title}
+                description={item.desc}
+              />
+            ))}
+          </DividerList>
+        </Reveal>
 
         <Reveal delay={400} className="mt-10 flex flex-col items-center gap-3 sm:mt-12">
           <Button onClick={go} size="lg" className="h-12 px-7 font-semibold shadow-[0_10px_30px_-12px_hsl(192_86%_31%_/0.55)]">
@@ -395,7 +360,7 @@ export function VerifyAndReceive() {
             <ArrowRight className="size-4" />
           </Button>
           <p className="text-center text-xs text-muted-foreground">
-            PDF to your inbox · PNR you can check on the airline&apos;s site
+            From {SITE.priceFrom} · {SITE.delivery}
           </p>
         </Reveal>
       </Container>
