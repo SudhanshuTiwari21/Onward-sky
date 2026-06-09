@@ -12,7 +12,8 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { BrandMark } from '@/components/site/Logo'
 import { Container, Section, SectionHeading, Reveal } from '@/components/site/primitives'
-import { SITE } from '@/lib/site-data'
+import { SITE, TRAVEL_PHOTOS } from '@/lib/site-data'
+import { TravelPhoto } from '@/components/site/travel-visuals'
 
 const PNR = 'K7G2QP'
 
@@ -237,12 +238,21 @@ export function VerifyAndReceive() {
       </div>
 
       <Container>
-        <SectionHeading
-          eyebrow="Verification"
-          title="Your ticket. The airline’s record."
-          description="Same booking reference on your PDF and the carrier’s site."
-          className="max-w-2xl"
-        />
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(220px,320px)] lg:gap-12 xl:gap-16">
+          <SectionHeading
+            eyebrow="Verification"
+            title="Your ticket. The airline’s record."
+            description="Same booking reference on your PDF and the carrier’s site."
+            className="max-w-2xl"
+          />
+          <Reveal delay={60} className="hidden lg:block">
+            <TravelPhoto
+              photo={TRAVEL_PHOTOS.boardingPass}
+              className="aspect-[4/5] rounded-2xl shadow-[0_20px_50px_-24px_rgba(8,44,66,0.35)] ring-1 ring-border/40"
+              imgClassName="object-[center_20%]"
+            />
+          </Reveal>
+        </div>
 
         <Reveal delay={40} className="mx-auto mt-8 flex max-w-md rounded-xl border border-border bg-secondary/50 p-1 lg:hidden">
           {(

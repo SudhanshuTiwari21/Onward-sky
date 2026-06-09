@@ -6,8 +6,11 @@ import { Container } from '@/components/site/primitives'
 import { Logo } from './Logo'
 import { NAV_LINKS } from '@/lib/site-data'
 
+const SCROLL_SOLID_THRESHOLD = 48
+
 export function Header() {
   const [open, setOpen] = useState(false)
+  const [solid, setSolid] = useState(false)
 
   useEffect(() => {
     document.body.style.overflow = open ? 'hidden' : ''
@@ -16,6 +19,13 @@ export function Header() {
     }
   }, [open])
 
+  useEffect(() => {
+    const onScroll = () => setSolid(window.scrollY > SCROLL_SOLID_THRESHOLD)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   const go = (href: string) => {
     setOpen(false)
     document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
@@ -23,7 +33,14 @@ export function Header() {
 
   return (
     <>
-      <header className="fixed inset-x-0 top-0 z-50 border-b border-border/60 bg-white/95 backdrop-blur-md">
+      <header
+        className={cn(
+          'fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300',
+          solid
+            ? 'border-b border-border/60 bg-white/95 backdrop-blur-md'
+            : 'border-b border-white/10 bg-transparent'
+        )}
+      >
         <Container className="flex h-[3.75rem] items-center gap-3 sm:h-16">
           <a
             href="#top"
@@ -31,7 +48,7 @@ export function Header() {
             aria-label="OnwardSky home"
             onClick={() => setOpen(false)}
           >
-            <Logo />
+            <Logo variant={solid ? 'default' : 'white'} />
           </a>
 
           <nav className="hidden flex-1 items-center justify-center lg:flex" aria-label="Main navigation">
@@ -40,7 +57,12 @@ export function Header() {
                 <button
                   key={link.href}
                   onClick={() => go(link.href)}
-                  className="rounded-md px-3 py-2 text-[13px] font-medium text-muted-foreground transition-colors hover:text-foreground"
+                  className={cn(
+                    'rounded-md px-3 py-2 text-[13px] font-medium transition-colors',
+                    solid
+                      ? 'text-muted-foreground hover:text-foreground'
+                      : 'text-white/75 hover:text-white'
+                  )}
                 >
                   {link.label}
                 </button>
@@ -51,7 +73,12 @@ export function Header() {
           <div className="hidden shrink-0 items-center gap-2 lg:flex">
             <Button
               onClick={() => go('#hero-form')}
-              className="h-10 rounded-lg bg-[#082C42] px-5 font-semibold hover:bg-[#0a3550]"
+              className={cn(
+                'h-10 rounded-lg px-5 font-semibold transition-colors',
+                solid
+                  ? 'bg-[#082C42] hover:bg-[#0a3550]'
+                  : 'bg-white text-[#082C42] hover:bg-white/90'
+              )}
             >
               Get a reservation
               <ArrowRight className="size-4" />
@@ -59,7 +86,12 @@ export function Header() {
           </div>
 
           <button
-            className="ml-auto inline-flex size-10 items-center justify-center rounded-lg border border-border text-foreground transition-colors hover:bg-secondary lg:hidden"
+            className={cn(
+              'ml-auto inline-flex size-10 items-center justify-center rounded-lg border transition-colors lg:hidden',
+              solid
+                ? 'border-border text-foreground hover:bg-secondary'
+                : 'border-white/25 text-white hover:bg-white/10'
+            )}
             onClick={() => setOpen((v) => !v)}
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}

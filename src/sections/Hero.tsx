@@ -180,7 +180,7 @@ export function Hero() {
             <div className="lg:pt-6">
               <HeroTicketPreview from={form.from} to={form.to} className="lg:-rotate-1 lg:scale-[1.02]" />
               <p className="mt-3 text-center text-xs text-white/70 lg:text-left">
-                Preview of what you receive — verifiable on the airline site.
+                Preview of what you receive - verifiable on the airline site.
               </p>
             </div>
           </div>

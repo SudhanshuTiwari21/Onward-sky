@@ -9,6 +9,47 @@ export const SITE = {
   countriesServed: '190+',
 }
 
+/** Royalty-free travel photography (Unsplash License) — stored in /public/assets/visuals */
+export type TravelPhoto = {
+  src: string
+  alt: string
+  label: string
+}
+
+export const TRAVEL_PHOTOS = {
+  airportWindow: {
+    src: '/assets/visuals/airport-window.jpg',
+    alt: 'View of an airplane wing through an airport terminal window',
+    label: 'Departure day',
+  },
+  boardingPass: {
+    src: '/assets/visuals/boarding-pass.jpg',
+    alt: 'Traveler holding a passport and boarding pass',
+    label: 'Boarding pass ready',
+  },
+  cabinInterior: {
+    src: '/assets/visuals/cabin-interior.jpg',
+    alt: 'Interior of a passenger airplane cabin',
+    label: 'In the cabin',
+  },
+  wingSky: {
+    src: '/assets/visuals/wing-sky.jpg',
+    alt: 'Sunrise seen from an airplane window above the clouds',
+    label: 'Above the clouds',
+  },
+  airportTerminal: {
+    src: '/assets/visuals/airport-terminal.jpg',
+    alt: 'Travelers walking through a bright airport terminal',
+    label: 'Airport terminal',
+  },
+} as const satisfies Record<string, TravelPhoto>
+
+export const TRAVEL_MOMENTS = [
+  TRAVEL_PHOTOS.airportWindow,
+  TRAVEL_PHOTOS.boardingPass,
+  TRAVEL_PHOTOS.cabinInterior,
+] as const
+
 export type NavLink = { label: string; href: string }
 
 export const NAV_LINKS: NavLink[] = [

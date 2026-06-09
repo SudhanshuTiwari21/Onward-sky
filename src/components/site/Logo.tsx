@@ -1,7 +1,8 @@
 import { cn } from '@/lib/utils'
 
-/** Official horizontal lockup — derived from `public/assets/onward sky logo.svg`. */
+/** Official horizontal lockup - derived from `public/assets/onward sky logo.svg`. */
 const LOGO_SRC = '/assets/onward-sky-logo.svg'
+const LOGO_WHITE_SRC = '/assets/onward-sky-logo-white.svg'
 
 const ICON_VIEWBOX = '520 2680 1480 1480'
 
@@ -56,9 +57,11 @@ export function BrandMark({ className }: { className?: string }) {
 export function Logo({
   className,
   showWordmark = true,
+  variant = 'default',
 }: {
   className?: string
   showWordmark?: boolean
+  variant?: 'default' | 'white'
 }) {
   if (!showWordmark) {
     return <BrandMark className={className} />
@@ -66,7 +69,7 @@ export function Logo({
 
   return (
     <img
-      src={LOGO_SRC}
+      src={variant === 'white' ? LOGO_WHITE_SRC : LOGO_SRC}
       alt="OnwardSky"
       width={820}
       height={168}
@@ -77,3 +80,4 @@ export function Logo({
 }
 
 export const logoAssetSrc = LOGO_SRC
+export const logoWhiteAssetSrc = LOGO_WHITE_SRC

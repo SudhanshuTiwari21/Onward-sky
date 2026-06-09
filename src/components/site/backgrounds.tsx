@@ -103,7 +103,7 @@ export function GlobeGrid({
   )
 }
 
-/** Layered hero globe — soft glow, radial fade, blends into copy + form column. */
+/** Layered hero globe - soft glow, radial fade, blends into copy + form column. */
 export function HeroGlobeBlend({ className }: { className?: string }) {
   return (
     <div className={cn('pointer-events-none absolute inset-0 z-0 overflow-hidden', className)} aria-hidden="true">

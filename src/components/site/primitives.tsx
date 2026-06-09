@@ -142,7 +142,7 @@ export function Reveal({
   )
 }
 
-/** Vertical list with hairline dividers — no card chrome. */
+/** Vertical list with hairline dividers - no card chrome. */
 export function DividerList({
   className,
   children,
@@ -176,7 +176,7 @@ export function LinkRow({
   )
 }
 
-/** Icon + title + description row — for features, benefits, delivery items. */
+/** Icon + title + description row - for features, benefits, delivery items. */
 export function FeatureRow({
   icon: Icon,
   title,
@@ -199,7 +199,7 @@ export function FeatureRow({
   )
 }
 
-/** Left-accent block — for callouts without a card frame. */
+/** Left-accent block - for callouts without a card frame. */
 export function AccentBlock({
   className,
   children,

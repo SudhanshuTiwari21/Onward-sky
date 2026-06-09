@@ -1,5 +1,6 @@
 import { Plane } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { TRAVEL_PHOTOS, type TravelPhoto } from '@/lib/site-data'
 
 function airportCode(value: string, fallback: string) {
   const t = value.trim().toUpperCase()
@@ -7,10 +8,49 @@ function airportCode(value: string, fallback: string) {
   return fallback
 }
 
+export function TravelPhoto({
+  photo,
+  className,
+  imgClassName,
+  overlay = 'none',
+}: {
+  photo: TravelPhoto
+  className?: string
+  imgClassName?: string
+  overlay?: 'none' | 'dark' | 'bottom'
+}) {
+  return (
+    <div className={cn('relative overflow-hidden', className)}>
+      <img
+        src={photo.src}
+        alt={photo.alt}
+        className={cn('h-full w-full object-cover', imgClassName)}
+        loading="lazy"
+        decoding="async"
+      />
+      {overlay === 'dark' ? (
+        <div className="absolute inset-0 bg-[#082C42]/55" aria-hidden="true" />
+      ) : null}
+      {overlay === 'bottom' ? (
+        <div
+          className="absolute inset-0 bg-gradient-to-t from-[#082C42]/80 via-[#082C42]/20 to-transparent"
+          aria-hidden="true"
+        />
+      ) : null}
+    </div>
+  )
+}
+
 export function SkyHeroBackdrop({ className }: { className?: string }) {
   return (
     <div className={cn('pointer-events-none absolute inset-0 overflow-hidden', className)} aria-hidden="true">
-      <div className="absolute inset-0 bg-[linear-gradient(165deg,#082C42_0%,#0d4a6e_42%,#1a6b8a_72%,#e8f6fa_100%)]" />
+      <img
+        src={TRAVEL_PHOTOS.wingSky.src}
+        alt=""
+        className="absolute inset-0 h-full w-full object-cover object-[center_30%] opacity-50 sm:opacity-55"
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(165deg,#082C42_0%,#0d4a6e_42%,#1a6b8a_72%,#e8f6fa_100%)] mix-blend-multiply opacity-90" />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,44,66,0.4)_0%,rgba(8,44,66,0.12)_45%,rgba(232,246,250,0.9)_100%)]" />
       <svg
         className="absolute inset-0 h-full w-full opacity-[0.22]"
         viewBox="0 0 1200 600"

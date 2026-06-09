@@ -1,13 +1,22 @@
 import { BadgeCheck, MapPin, PlaneTakeoff, Search } from 'lucide-react'
+import { TravelPhoto } from '@/components/site/travel-visuals'
 import { Container, Section, Reveal } from '@/components/site/primitives'
-import { STEPS } from '@/lib/site-data'
+import { STEPS, TRAVEL_PHOTOS } from '@/lib/site-data'
 
 const ICONS = [MapPin, PlaneTakeoff, Search, BadgeCheck]
 
 export function HowItWorks() {
   return (
-    <Section id="how-it-works" className="border-y border-border/60 bg-[#f4f9fb] py-12 sm:py-16">
-      <Container>
+    <Section id="how-it-works" className="relative overflow-hidden border-y border-border/60 bg-[#f4f9fb] py-12 sm:py-16">
+      <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[38%] lg:block" aria-hidden="true">
+        <TravelPhoto
+          photo={TRAVEL_PHOTOS.airportTerminal}
+          className="h-full"
+          imgClassName="opacity-90"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#f4f9fb] via-[#f4f9fb]/85 to-transparent" />
+      </div>
+      <Container className="relative">
         <Reveal>
           <p className="text-center text-xs font-semibold uppercase tracking-[0.18em] text-[#2FB0C6]">
             How it works

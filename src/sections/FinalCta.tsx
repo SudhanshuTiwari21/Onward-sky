@@ -1,15 +1,22 @@
 import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { HeroTicketPreview } from '@/components/site/travel-visuals'
+import { HeroTicketPreview, TravelPhoto } from '@/components/site/travel-visuals'
 import { Container, Reveal } from '@/components/site/primitives'
-import { SITE } from '@/lib/site-data'
+import { SITE, TRAVEL_PHOTOS } from '@/lib/site-data'
 
 export function FinalCta() {
   const go = () => document.querySelector('#hero-form')?.scrollIntoView({ behavior: 'smooth' })
 
   return (
-    <section id="get-started" className="relative overflow-hidden bg-[#082C42] py-14 sm:py-20">
-      <Container>
+    <section id="get-started" className="relative overflow-hidden py-14 sm:py-20">
+      <TravelPhoto
+        photo={TRAVEL_PHOTOS.cabinInterior}
+        className="absolute inset-0"
+        imgClassName="scale-105 object-[center_35%]"
+        overlay="dark"
+      />
+      <div className="absolute inset-0 bg-[#082C42]/75" aria-hidden="true" />
+      <Container className="relative">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
           <Reveal>
             <h2 className="text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">

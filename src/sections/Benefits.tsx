@@ -36,7 +36,7 @@ export function Benefits() {
         <SectionHeading
           eyebrow="Why OnwardSky"
           title="Fast, affordable, built for travelers under pressure"
-          description="Speed and compliance when you need onward travel proof — without buying a full fare."
+          description="Speed and compliance when you need onward travel proof - without buying a full fare."
         />
 
         <Reveal className="mt-8 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 border-y border-border/70 py-6">
