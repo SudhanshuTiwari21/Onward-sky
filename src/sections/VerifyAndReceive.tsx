@@ -1,46 +1,20 @@
 import { useState } from 'react'
 import {
   ArrowRight,
-  BadgeCheck,
   Download,
   FileText,
   Globe,
-  Mail,
   Plane,
   PlaneTakeoff,
   Search,
-  ShieldCheck,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { BrandMark } from '@/components/site/Logo'
-import { Container, DividerList, FeatureRow, Section, SectionHeading, Reveal } from '@/components/site/primitives'
+import { Container, Section, SectionHeading, Reveal } from '@/components/site/primitives'
 import { SITE } from '@/lib/site-data'
 
 const PNR = 'K7G2QP'
-
-const DELIVERY_ITEMS = [
-  {
-    icon: FileText,
-    title: 'Airline-standard PDF',
-    desc: 'Formatted like a real e-ticket receipt agents recognize at check-in.',
-  },
-  {
-    icon: Search,
-    title: 'Booking reference (PNR)',
-    desc: 'Look it up on the airline’s manage-booking page yourself.',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Full flight details',
-    desc: 'Passenger, route, dates, flight number and airline in one document.',
-  },
-  {
-    icon: Mail,
-    title: 'Delivered in minutes',
-    desc: 'PDF to your inbox - save it or forward to an agent.',
-  },
-]
 
 function MockPanel({ className, children }: { className?: string; children: React.ReactNode }) {
   return (
@@ -264,19 +238,10 @@ export function VerifyAndReceive() {
 
       <Container>
         <SectionHeading
-          eyebrow={
-            <span className="inline-flex items-center gap-1.5">
-              <BadgeCheck className="size-3.5 text-primary" />
-              What you get · How to verify
-            </span>
-          }
-          title={
-            <>
-              Your PDF.{' '}
-              <span className="text-gradient-brand">The airline’s confirmation.</span>
-            </>
-          }
-          description="See what lands in your inbox - then check the same booking reference on the carrier’s site."
+          eyebrow="Verification"
+          title="Your ticket. The airline’s record."
+          description="Same booking reference on your PDF and the carrier’s site."
+          className="max-w-2xl"
         />
 
         <Reveal delay={40} className="mx-auto mt-8 flex max-w-md rounded-xl border border-border bg-secondary/50 p-1 lg:hidden">
@@ -333,20 +298,7 @@ export function VerifyAndReceive() {
           </p>
         </Reveal>
 
-        <Reveal delay={120} className="mt-10 lg:mt-12">
-          <DividerList>
-            {DELIVERY_ITEMS.map((item) => (
-              <FeatureRow
-                key={item.title}
-                icon={item.icon}
-                title={item.title}
-                description={item.desc}
-              />
-            ))}
-          </DividerList>
-        </Reveal>
-
-        <Reveal delay={200} className="mt-10 flex flex-col items-center gap-3 sm:mt-12">
+        <Reveal delay={120} className="mt-10 flex flex-col items-center gap-3 sm:mt-12">
           <Button onClick={go} size="lg" className="h-12 px-7 font-semibold shadow-[0_10px_30px_-12px_hsl(192_86%_31%_/0.55)]">
             Get a verifiable reservation
             <ArrowRight className="size-4" />
