@@ -10,7 +10,6 @@ import {
   PlaneTakeoff,
   Search,
   ShieldCheck,
-  Sparkles,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -43,56 +42,69 @@ const DELIVERY_ITEMS = [
   },
 ]
 
+function MockPanel({ className, children }: { className?: string; children: React.ReactNode }) {
+  return (
+    <div
+      className={cn(
+        'overflow-hidden rounded-xl border border-border/80 bg-background shadow-[0_12px_40px_-24px_hsl(201_50%_20%_/0.18)]',
+        className
+      )}
+    >
+      {children}
+    </div>
+  )
+}
+
 function BrowserChrome({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-hidden border-y border-border bg-background">
+    <MockPanel>
       <div className="flex items-center gap-2 border-b border-border bg-secondary/40 px-4 py-3">
-        <span className="size-2.5 rounded-full bg-destructive/70" />
-        <span className="size-2.5 rounded-full bg-warning/70" />
-        <span className="size-2.5 rounded-full bg-success/70" />
-        <div className="ml-2 flex flex-1 items-center gap-2 rounded-lg border border-border bg-background/80 px-3 py-1.5">
+        <span className="size-2.5 shrink-0 rounded-full bg-destructive/70" />
+        <span className="size-2.5 shrink-0 rounded-full bg-warning/70" />
+        <span className="size-2.5 shrink-0 rounded-full bg-success/70" />
+        <div className="ml-1 flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-border bg-background px-3 py-1.5 sm:ml-2">
           <Globe className="size-3.5 shrink-0 text-muted-foreground" />
           <span className="truncate font-mono text-[11px] text-muted-foreground sm:text-xs">
             airline.com/manage-booking
           </span>
         </div>
       </div>
-      <div className="bg-gradient-to-b from-background to-secondary/20 p-4 sm:p-5">{children}</div>
-    </div>
+      <div className="bg-gradient-to-b from-background to-secondary/15 p-4 sm:p-5">{children}</div>
+    </MockPanel>
   )
 }
 
-function ItineraryVisual({ className }: { className?: string }) {
+function ItineraryVisual() {
   return (
-    <div className={cn('overflow-hidden border-y border-border bg-background', className)}>
+    <MockPanel>
       <div className="relative border-b border-border bg-secondary/30 px-4 py-4 sm:px-5">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-50"
+          className="pointer-events-none absolute inset-0 opacity-40"
           style={{
             backgroundImage:
               'repeating-linear-gradient(-45deg, hsl(201 40% 25% / 0.05) 0, hsl(201 40% 25% / 0.05) 1px, transparent 1px, transparent 9px)',
           }}
         />
-        <div className="relative flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2.5">
-            <BrandMark className="size-7" />
-            <div className="leading-tight">
+        <div className="relative flex items-start justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2.5">
+            <BrandMark className="size-8 shrink-0" />
+            <div className="min-w-0 leading-tight">
               <div className="text-sm font-semibold">Flight Reservation</div>
               <div className="text-[11px] text-muted-foreground">e-Itinerary · PDF</div>
             </div>
           </div>
-          <div className="rounded-xl border border-primary/25 bg-primary/10 px-2.5 py-1.5 text-right ring-1 ring-inset ring-primary/15">
+          <div className="shrink-0 rounded-lg border border-primary/25 bg-primary/10 px-2.5 py-1.5 text-right">
             <div className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
               PNR
             </div>
-            <div className="font-mono text-sm font-bold tracking-[0.16em] text-primary">{PNR}</div>
+            <div className="font-mono text-sm font-bold tracking-[0.12em] text-primary">{PNR}</div>
           </div>
         </div>
       </div>
 
       <div className="space-y-4 p-4 sm:p-5">
-        <div className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-4">
+        <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-xs">
           {[
             { label: 'Passenger', value: 'ALEX TRAVELER' },
             { label: 'Airline', value: 'TAP Portugal' },
@@ -108,15 +120,15 @@ function ItineraryVisual({ className }: { className?: string }) {
           ))}
         </div>
 
-        <div className="border-y border-border/60 bg-secondary/20 py-3.5">
+        <div className="rounded-lg border border-border/70 bg-secondary/25 px-3 py-3.5">
           <div className="flex items-center justify-between gap-2">
             <div>
               <div className="text-xl font-semibold tracking-tight">LIS</div>
               <div className="text-[11px] text-muted-foreground">09:40</div>
             </div>
-            <div className="flex flex-1 items-center gap-1.5 px-1">
+            <div className="flex flex-1 items-center gap-1.5 px-2">
               <span className="h-px flex-1 bg-border" />
-              <span className="flex size-7 items-center justify-center rounded-full bg-primary/12 text-primary">
+              <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary/12 text-primary">
                 <Plane className="size-3.5 rotate-90" />
               </span>
               <span className="h-px flex-1 bg-border" />
@@ -139,25 +151,25 @@ function ItineraryVisual({ className }: { className?: string }) {
           </span>
         </div>
       </div>
-    </div>
+    </MockPanel>
   )
 }
 
-function AirlineLookupVisual({ className }: { className?: string }) {
+function AirlineLookupVisual() {
   return (
     <BrowserChrome>
-      <div className={cn('flex flex-col gap-3.5', className)}>
+      <div className="flex flex-col gap-3.5">
         <div className="flex items-center gap-2">
-          <div className="flex flex-1 items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
+          <div className="flex min-w-0 flex-1 items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
             <Search className="size-4 shrink-0 text-muted-foreground" />
-            <span className="font-mono text-sm tracking-[0.18em]">{PNR}</span>
+            <span className="truncate font-mono text-sm tracking-[0.14em]">{PNR}</span>
           </div>
-          <span className="inline-flex shrink-0 items-center rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground sm:text-sm">
+          <span className="inline-flex shrink-0 items-center rounded-lg bg-primary px-3 py-2 text-xs font-semibold text-primary-foreground">
             Find booking
           </span>
         </div>
 
-        <div className="border-y border-success/25 bg-success/[0.04] py-3.5">
+        <div className="rounded-lg border border-success/25 bg-success/[0.04] p-3.5">
           <div className="flex items-center justify-between gap-2">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
               Reservation status
@@ -173,9 +185,9 @@ function AirlineLookupVisual({ className }: { className?: string }) {
               <div className="text-xl font-semibold">LIS</div>
               <div className="text-[11px] text-muted-foreground">Lisbon</div>
             </div>
-            <div className="flex flex-1 items-center gap-1.5 px-1 text-muted-foreground">
+            <div className="flex flex-1 items-center gap-1.5 px-2 text-muted-foreground">
               <span className="h-px flex-1 bg-border" />
-              <PlaneTakeoff className="size-4 text-primary" />
+              <PlaneTakeoff className="size-4 shrink-0 text-primary" />
               <span className="h-px flex-1 bg-border" />
             </div>
             <div className="text-right">
@@ -210,30 +222,23 @@ function AirlineLookupVisual({ className }: { className?: string }) {
 
 function PnrBridge() {
   return (
-    <div className="relative flex flex-col items-center justify-center px-2 py-6 lg:px-4 lg:py-0">
+    <div className="flex flex-col items-center justify-center gap-3 self-center px-2 lg:min-w-[9.5rem] lg:px-4">
       <div
         aria-hidden="true"
-        className="absolute hidden h-px w-full bg-gradient-to-r from-primary/20 via-primary/50 to-primary/20 lg:block"
+        className="hidden h-px w-full bg-gradient-to-r from-border via-primary/40 to-border lg:block"
       />
-      <div
-        aria-hidden="true"
-        className="absolute left-1/2 top-4 h-[calc(100%-2rem)] w-px -translate-x-1/2 bg-gradient-to-b from-primary/20 via-primary/45 to-primary/20 lg:hidden"
-      />
-
-      <div className="relative z-10 flex flex-col items-center gap-2 border-y border-primary/30 bg-background px-4 py-3">
-        <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-primary">
-          <Sparkles className="size-3" />
+      <div className="flex w-full max-w-[11rem] flex-col items-center gap-1.5 rounded-xl border border-primary/25 bg-background px-4 py-3.5 text-center shadow-sm lg:max-w-none">
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-primary">
           Same PNR
         </span>
-        <span className="font-mono text-lg font-bold tracking-[0.2em] text-primary">{PNR}</span>
-        <span className="max-w-[8rem] text-center text-[10px] leading-snug text-muted-foreground">
+        <span className="font-mono text-base font-bold tracking-[0.18em] text-primary sm:text-lg">
+          {PNR}
+        </span>
+        <span className="text-[10px] leading-snug text-muted-foreground">
           On your PDF and in the airline system
         </span>
       </div>
-
-      <div className="relative z-10 mt-3 hidden items-center gap-1 text-primary/70 lg:flex">
-        <ArrowRight className="size-4" />
-      </div>
+      <ArrowRight className="hidden size-4 text-primary/50 lg:block" aria-hidden="true" />
     </div>
   )
 }
@@ -255,12 +260,6 @@ export function VerifyAndReceive() {
               'radial-gradient(circle, hsl(189 70% 55% / 0.14), hsl(192 80% 45% / 0.05) 50%, transparent 72%)',
           }}
         />
-        <div
-          className="absolute bottom-[-15%] right-[-5%] h-[480px] w-[640px] rounded-full blur-[120px]"
-          style={{
-            background: 'radial-gradient(circle, hsl(201 70% 60% / 0.08), transparent 65%)',
-          }}
-        />
       </div>
 
       <Container>
@@ -280,7 +279,6 @@ export function VerifyAndReceive() {
           description="See what lands in your inbox - then check the same booking reference on the carrier’s site."
         />
 
-        {/* Mobile tab switcher */}
         <Reveal delay={40} className="mx-auto mt-8 flex max-w-md rounded-xl border border-border bg-secondary/50 p-1 lg:hidden">
           {(
             [
@@ -305,38 +303,32 @@ export function VerifyAndReceive() {
           ))}
         </Reveal>
 
-        {/* Visual showcase */}
-        <Reveal delay={80} className="relative mt-8 lg:mt-12">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -inset-4 rounded-[2rem] bg-gradient-to-br from-primary/8 via-transparent to-accent/25 blur-xl"
-          />
-
-          {/* Desktop: dual panel */}
-          <div className="relative hidden items-stretch gap-0 lg:grid lg:grid-cols-[1fr_auto_1fr]">
-            <div className="relative">
-              <span className="absolute -left-1 top-4 z-10 rounded-full border border-border bg-background px-2.5 py-1 text-[11px] font-semibold text-foreground shadow-sm">
-                1 · What you receive
-              </span>
+        <Reveal delay={80} className="mt-8 lg:mt-12">
+          {/* Desktop: side-by-side comparison */}
+          <div className="hidden lg:grid lg:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] lg:items-start lg:gap-6 xl:gap-8">
+            <div className="flex min-w-0 flex-col gap-3">
+              <p className="text-xs font-semibold text-foreground">1 · What you receive</p>
               <ItineraryVisual />
             </div>
 
             <PnrBridge />
 
-            <div className="relative">
-              <span className="absolute -right-1 top-4 z-10 rounded-full border border-primary/25 bg-primary/10 px-2.5 py-1 text-[11px] font-semibold text-primary shadow-sm">
-                2 · Verify yourself
-              </span>
+            <div className="flex min-w-0 flex-col gap-3">
+              <p className="text-xs font-semibold text-primary">2 · Verify yourself</p>
               <AirlineLookupVisual />
             </div>
           </div>
 
-          {/* Mobile: single panel */}
-          <div className="relative lg:hidden">
+          {/* Mobile: tabbed single panel */}
+          <div className="flex flex-col gap-3 lg:hidden">
+            <p className="text-xs font-semibold text-muted-foreground">
+              {tab === 'itinerary' ? '1 · What you receive' : '2 · Verify yourself'}
+            </p>
             {tab === 'itinerary' ? <ItineraryVisual /> : <AirlineLookupVisual />}
+            <PnrBridge />
           </div>
 
-          <p className="mt-4 text-center text-xs text-muted-foreground">
+          <p className="mt-5 text-center text-xs text-muted-foreground">
             Illustrative example. Your reservation includes a unique, lookupable PNR.
           </p>
         </Reveal>
@@ -354,7 +346,7 @@ export function VerifyAndReceive() {
           </DividerList>
         </Reveal>
 
-        <Reveal delay={400} className="mt-10 flex flex-col items-center gap-3 sm:mt-12">
+        <Reveal delay={200} className="mt-10 flex flex-col items-center gap-3 sm:mt-12">
           <Button onClick={go} size="lg" className="h-12 px-7 font-semibold shadow-[0_10px_30px_-12px_hsl(192_86%_31%_/0.55)]">
             Get a verifiable reservation
             <ArrowRight className="size-4" />
